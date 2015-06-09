@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block leftList %}
+{% for index in category %}
+
+
+    <a href="/?c={{ index.name }}" class="list-group-item">       {{ index.name }}</a>
+
+
+ {% endfor %}
+{% endblock %}
+
+
+
+{% block content %}
+
+
+{% for item in photos %}
+
+    <div class="col-sm-5 col-md-3">
+
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+         </div>
+
+        {% for i in item.photos %}
+        {{ i }}
+        {% endfor %}
+
+{% endfor %}
+{% endblock %}
+
+

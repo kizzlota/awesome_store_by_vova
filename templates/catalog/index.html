@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block leftList %}
+{% for index in category %}
+
+
+    <a href="/?c={{ index.name }}" class="list-group-item">       {{ index.name }}</a>
+
+
+ {% endfor %}
+{% endblock %}
+
+
+
+ {% block busket %}
+    {% for bas in basket %}
+     {{ bas.shoes_id.name }} <a href="/busket_del/?id={{ bas.id }}" class="btn btn-primary" role="button">del</a> <br>
+        {{ bas.id }}
+
+     {% endfor %}
+
+ {% endblock %}
+
+
+
+{% block content %}
+{% for shoe in shoes %}
+
+    <div class="col-sm-5 col-md-3">
+<div class="thumbnail">
+      <img src="media/{{ shoe.image }}" alt="...">
+      <div class="caption">
+        <h3>{{ shoe.name }}</h3>
+        <p>{{ shoe.decription }}</p>
+        <p><a href="#" class="btn btn-primary" role="button">{{ shoe.price }}</a><a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
+      </div>
+ </div>
+ </div>
+
+
+{% endfor %}
+{% endblock %}
+
+
+

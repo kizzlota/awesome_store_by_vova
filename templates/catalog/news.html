@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block leftList %}
+{% for index in category %}
+
+
+    <a href="/?c={{ index.name }}" class="list-group-item">       {{ index.name }}</a>
+
+
+ {% endfor %}
+{% endblock %}
+
+
+  {% block busket %}
+  {% endblock %}
+
+
+{% block content %}
+
+    {{ photo }}
+{% for item in outline_news %}
+
+    <div class="col-sm-5 col-md-3">
+<div class="thumbnail">
+      <img src="media/{{ item.image }}" alt="...">
+      <div class="caption">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.decription }}</p>
+        <p><a href="#" class="btn btn-primary" role="button">{{ item.price }}</a><a href="#" class="btn btn-primary" role="button">Buy me</a> </p>
+      </div>
+ </div>
+ </div>
+
+
+{% endfor %}
+{% endblock %}
+
+
