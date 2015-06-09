@@ -23,17 +23,16 @@ class BasketAdmin(admin.ModelAdmin):
 
 
 class OrderModel(models.Model):
-	order_number = models.IntegerField()
 	user_name = models.CharField(max_length=100)
 	user_phone = models.CharField(max_length=100)
-	user_address = models.CharField(max_length=150)
+	user_address = models.TextField(max_length=350)
 	user_mail = models.EmailField(max_length=100)
 	order_id = models.ManyToManyField(Shoes)
 
 
 class OrderAdmin(admin.ModelAdmin):
-	list_display = ['order_number', 'user_name', 'user_phone', 'user_address', 'user_mail']
-	search_fields = ['order_number', 'user_name', 'user_phone', 'user_address']
+	list_display = [ 'user_name', 'user_phone', 'user_address', 'user_mail']
+	search_fields = ['user_name', 'user_phone', 'user_address']
 
 
 admin.site.register(BasketModel, BasketAdmin)

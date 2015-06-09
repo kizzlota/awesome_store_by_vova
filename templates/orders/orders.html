@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+{% for ord in orders_outlines %}
+     {% for i in ord.order_id.all %}
+    <div class="media">
+  <div class="media-left media-middle">
+    <a href="#">
+      <img class="media-object" src="/media/{{ i.image }}" width="64px" alt="...">
+    </a>
+  </div>
+  <div class="media-body">
+    <h4 class="media-heading">{{ i.name }}</h4>
+    size 34
+  </div>
+      <div class="media-right">
+    <h4 class="media-heading">{{ i.price }}</h4>
+    ...
+  </div>
+</div>
+
+
+{%  endfor %}
+{% endfor %}
+    <div class="list-group-item">Загальна сума {{ full_price }}</div>
+{% endblock %}
+

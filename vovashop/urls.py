@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^', include('catalog.urls')),
     url(r'^photologue/', include('photologue.urls', namespace='photologue')),
+    url(r'^orders/', include('busket.urls')),
 
 
 
