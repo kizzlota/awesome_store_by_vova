@@ -4,27 +4,55 @@
 {% block content %}
 
 
-{% for ord in orders_outlines %}
-     {% for i in ord.order_id.all %}
+{% for ord in basket_info %}
+
     <div class="media">
   <div class="media-left media-middle">
     <a href="#">
-      <img class="media-object" src="/media/{{ i.image }}" width="64px" alt="...">
+      <img class="media-object" src="/media/{{ ord.shoes_id.image }}" width="64px" alt="...">
     </a>
   </div>
   <div class="media-body">
-    <h4 class="media-heading">{{ i.name }}</h4>
-    size 34
+    <h4 class="media-heading">{{ ord.shoes_id.id }}</h4>
+
   </div>
       <div class="media-right">
-    <h4 class="media-heading">{{ i.price }}</h4>
+    <h4 class="media-heading">{{ ord.shoes_id.price }}</h4>
     ...
   </div>
-</div>
+    </div>
 
 
-{%  endfor %}
 {% endfor %}
-    <div class="list-group-item">Загальна сума {{ full_price }}</div>
+
+    <li class="list-group-item">Загальна сума {{ full_price }}</li>
+
+    <form action="/orders/new/" method="POST">
+    <label for="your_name">Your name: </label>
+    <ul>
+       {% csrf_token %}
+        {{ user_info.non_field_errors }}
+        {{ user_info.user_name.label_tag }}{{ user_info.user_name }}
+      <br>
+        {{ user_info.user_mail.label }}{{ user_info.user_mail }}
+        <br> {{ user_info.user_mail.errors }}
+        <br>
+        {{ user_info.user_phone.label }}{{ user_info.user_phone }}
+        <br> {{ user_info.user_phone.errors }}
+        {{ user_info.user_address.label }}{{ user_info.user_address }}
+        <br>{{ user_info.user_address.errors }}
+
+
+        {{ user_info.order_id.label }}
+        <select multiple="multiple" id="id_order_id" name="order_id">
+        {% for ord in basket_info %}
+            <option value="{{ ord.shoes_id.id }}"> {{ ord.shoes_id.name }}</option>
+        {% endfor %}
+        </select>
+
+        </ul>
+    <input type="submit" value="OK">
+</form>
+
 {% endblock %}
 

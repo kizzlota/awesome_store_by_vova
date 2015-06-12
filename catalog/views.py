@@ -11,14 +11,11 @@ from django.shortcuts import redirect
 
 def index(request):
 	category = request.GET.get('c', u'Чоботи')
-
 	list_category = Category.objects.all()
-
 	shoes = Shoes.objects.filter(category_name__name=category).order_by('-id')
 	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
 				request.META.get('PROCESSOR_IDENTIFIER')
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
-
 	return render(request, 'catalog/index.html', {'category': list_category, 'shoes': shoes, 'basket': basket})
 
 
@@ -39,9 +36,6 @@ def busket(request):
 				request.META.get('PROCESSOR_IDENTIFIER')
 	shoes = Shoes.objects.get(id=id1)
 	date = BasketModel(data_user_hash=hashlib.sha256(user_date).hexdigest(), quantity=1, shoes_id=shoes)
-	# date.data_user_hash = hashlib.sha256(user_date).hexdigit()
-	# date.shoes_id = id1
-	# date.quantity = 1
 	date.save()
 	return redirect('/')
 

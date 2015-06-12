@@ -18,7 +18,7 @@ class BasketModel(models.Model):
 
 
 class BasketAdmin(admin.ModelAdmin):
-	list_display = ["data_user_hash", "quantity", "date", "shoes_id"]
+	list_display = ["id", "data_user_hash", "quantity", "date", "shoes_id"]
 	search_fields = ["data_user_hash", "date"]
 
 
@@ -31,7 +31,7 @@ class OrderModel(models.Model):
 
 
 class OrderAdmin(admin.ModelAdmin):
-	list_display = [ 'user_name', 'user_phone', 'user_address', 'user_mail']
+	list_display = ['id', 'user_name', 'user_phone', 'user_address', 'user_mail']
 	search_fields = ['user_name', 'user_phone', 'user_address']
 
 
