@@ -6,7 +6,7 @@
 
 {% for ord in basket_info %}
 
-    <div class="media">
+    <div class="media" xmlns="http://www.w3.org/1999/html">
   <div class="media-left media-middle">
     <a href="#">
       <img class="media-object" src="/media/{{ ord.shoes_id.image }}" width="64px" alt="...">
@@ -42,13 +42,14 @@
         {{ user_info.user_address.label }}{{ user_info.user_address }}
         <br>{{ user_info.user_address.errors }}
 
-
+    <div style="display: none;">
         {{ user_info.order_id.label }}
         <select multiple="multiple" id="id_order_id" name="order_id">
         {% for ord in basket_info %}
-            <option value="{{ ord.shoes_id.id }}"> {{ ord.shoes_id.name }}</option>
+            <option value="{{ ord.shoes_id.id }}" selected="selected"> {{ ord.shoes_id.name }}</option>
         {% endfor %}
         </select>
+    </div>
 
         </ul>
     <input type="submit" value="OK">

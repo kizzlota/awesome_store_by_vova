@@ -22,12 +22,12 @@ def new_order(request):
 		for i in ord.order_id.all():
 			i_all += i.price
 
-	if request.method == 'POST':
-		name_form = OrderForm(request.POST)
-		if name_form.is_valid():
-			post = name_form.save(commit=False)
-
-			post.save()
+	if request.method == 'POST':                    # якщо метод з форми є POST тоді наступне
+		name_form = OrderForm(request.POST)         # свторюємо PostForm з даними з форми
+		if name_form.is_valid():                    # валідація
+			post = name_form.save(commit=False)     # відтермінування збереження форми комміт=фолс
+			post.save()                             # saving and redirecting
+			name_form.save_m2m()
 			return HttpResponseRedirect('/')
 	else:
 		name_form = OrderForm()
@@ -49,5 +49,6 @@ def new_user_order(request):
 			post.save()
 			return redirect('/')
 	asd = OrderModel.objects.filter(id=11)
+	frg = OrderModel.objects.all()
 
-	return render(request, 'catalog/for_test.html', {'basket_info_test': basket_hash, 'form': form, 'asd': asd})
+	return render(request, 'catalog/for_test.html', {'basket_info_test': basket_hash, 'form': form, 'asd': asd, 'frg': frg})
