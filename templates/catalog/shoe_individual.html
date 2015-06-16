@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{%  include '' %}
+
+{% block leftList %}
+{% for index in category %}
+
+    <a href="/?c={{ index.name }}" class="list-group-item">   {{ index.name }}</a>
+
+ {% endfor %}
+{% endblock %}
+
+
+{% block busket %}
+    {% include 'catalog/busket.html' %}
+{% endblock %}
+
+
+
+{%  block content %}
+
+    <div>
+        {%  for pic in images_few %}
+            <img src="/media/{{ pic.main_image }}" width="480px" /> <br>
+
+            {% for pic_few in pic.image.all %}
+                <img src="/media/{{ pic_few.images }}" width="260px" />
+            {% endfor %}
+            <br>
+            <hr>
+            <hr>
+            <br>
+            <div class="product_info">
+            <ul>
+                <li>Name: {{ pic.name }}</li>
+                <li>price: {{ pic.price }}</li>
+                <li>description: {{ pic.description }}</li>
+            </ul>
+            </div>
+        {% endfor %}
+    </div>
+    <div>
+        {%  for i in pictures_shoes %}
+        <img src="/media/{{ i }}" width="240px" />
+        {% endfor %}
+
+    </div>
+
+{%  endblock %}

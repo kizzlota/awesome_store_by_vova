@@ -1,0 +1,12 @@
+    {% for bas in basket %}
+      {{ bas.id }}  {{ bas.shoes_id.name }} <a href="/busket_del/?id={{ bas.id }}" class="btn btn-primary" role="button">del</a> <br>
+     {% endfor %}
+
+     <form action="new_user_order/" method="POST"><br>
+    <label for="submit_orders">Submit to orders: </label>
+    <ul>
+       {% csrf_token %}{{ var.id }}
+        </ul>
+    <input type="submit" value="SUBMIT">
+</form>
+    <a href="/orders/new/" target="_blank" class="btn-primary" role="button">orders</a>

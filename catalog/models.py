@@ -48,7 +48,7 @@ class ShoesPhotosAdmin(admin.ModelAdmin):
 
 class Shoes(models.Model):
 	name = models.CharField(max_length=200)
-	image = models.ManyToManyField(ShoesPhotos)
+	image = models.ManyToManyField(ShoesPhotos, blank=True)
 	main_image = models.ImageField(blank=True, null=True, upload_to=get_file_path,
 	                               default="/static/img/shoesimage.jpg")  # comix
 	price = models.IntegerField()
@@ -69,12 +69,20 @@ class Shoes(models.Model):
 class PropertyImageInline(admin.TabularInline):
 	model = Shoes.image.through
 	extra = 3
+	readonly_fields = ['row_name']
+	def row_name(self, instance):
+		return u'<img src="/media/%s" width="64px" / >' % instance.shoesphotos.images
+	row_name.short_description = 'row_name2'
+	row_name.allow_tags = True
+
+
 
 
 class ShoesAdmin(admin.ModelAdmin):
-	list_display = ["name", "price", "date", "image_tag"]
+	list_display = ["id", "name", "price", "date", "image_tag"]
 	search_fields = ["name", "price"]
-	filter_horizontal = ('image',)
+	# filter_horizontal = ('image',)
+	exclude = ('image',)
 	inlines = [PropertyImageInline, ]
 
 

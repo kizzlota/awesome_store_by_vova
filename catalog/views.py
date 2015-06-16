@@ -1,12 +1,18 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-from models import Shoes, Category
+from models import Shoes, Category, ShoesPhotos
 from django.shortcuts import render_to_response
 from photologue.models import Gallery
 import hashlib
 from busket.models import BasketModel
 from django.shortcuts import redirect
 # Create your views here.
+
+
+def true_busket(request):
+	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
+				request.META.get('PROCESSOR_IDENTIFIER')
+	return BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 
 
 def index(request):
@@ -47,6 +53,7 @@ def busket_del(request):
 	return redirect('/')
 
 
+def shoe(request, shoe_id):
+	images = Shoes.objects.filter(id=shoe_id)
 
-
-
+	return render(request, 'catalog/shoe_individual.html', {'images_few': images, 'basket': true_busket(request)})
