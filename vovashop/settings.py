@@ -39,7 +39,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'catalog',
-    'photologue',
+    # 'photologue',
     'sortedm2m',
     'pytz',
     'busket',

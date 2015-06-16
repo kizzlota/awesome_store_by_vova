@@ -1,6 +1,16 @@
 from django.db import models
 from django.contrib import admin
+
+import uuid
+import os
 # Create your models here.
+
+
+
+def get_file_path(instance, filename):
+	ext = filename.split('.')[-1]
+	filename = "%s.%s" % (uuid.uuid4(), ext)
+	return os.path.join('shoes_images', filename)
 
 
 class Category(models.Model):
@@ -15,9 +25,32 @@ class CategoryAdmin(admin.ModelAdmin):
 	search_fields = ["name"]
 
 
+class ShoesPhotos(models.Model):
+	images = models.ImageField(blank=True, null=True, upload_to=get_file_path, default="/static/img/shoesimage.jpg")
+	# des = models.IntegerField(null=True)
+
+	def __unicode__(self):
+		return self.images.name
+
+	def image_tag(self):
+		return u'<img src= "%s" width="120px" / >' % self.images.url
+
+	image_tag.short_description = 'Image'
+	image_tag.allow_tags = True
+
+
+
+class ShoesPhotosAdmin(admin.ModelAdmin):
+	list_display = ['images', 'image_tag']
+	search_fields = ['images']
+# readonly_fields = ('image_tag',)
+
+
 class Shoes(models.Model):
 	name = models.CharField(max_length=200)
-	image = models.ImageField(blank=True, null=True, upload_to='shoes_images', default="/static/img/shoesimage.jpg")
+	image = models.ManyToManyField(ShoesPhotos)
+	main_image = models.ImageField(blank=True, null=True, upload_to=get_file_path,
+	                               default="/static/img/shoesimage.jpg")  # comix
 	price = models.IntegerField()
 	description = models.CharField(max_length=150, blank=True, null=True)
 	category_name = models.ManyToManyField(Category)
@@ -27,13 +60,24 @@ class Shoes(models.Model):
 	def __unicode__(self):
 		return self.name
 
+	def image_tag(self):
+		return u'<img src= "%s" width="64px" / >' % self.main_image.url
+
+	image_tag.short_description = 'Image'
+	image_tag.allow_tags = True
+
+class PropertyImageInline(admin.TabularInline):
+	model = Shoes.image.through
+	extra = 3
+
 
 class ShoesAdmin(admin.ModelAdmin):
-	list_display = ["name", "price", "date"]
+	list_display = ["name", "price", "date", "image_tag"]
 	search_fields = ["name", "price"]
+	filter_horizontal = ('image',)
+	inlines = [PropertyImageInline, ]
 
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Shoes, ShoesAdmin)
-
-
+admin.site.register(ShoesPhotos, ShoesPhotosAdmin)
