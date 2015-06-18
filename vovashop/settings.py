@@ -43,6 +43,8 @@ INSTALLED_APPS = (
     'sortedm2m',
     'pytz',
     'busket',
+    'mptt',
+
 
 
 

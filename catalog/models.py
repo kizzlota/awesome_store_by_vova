@@ -1,11 +1,10 @@
 from django.db import models
 from django.contrib import admin
-
+from mptt.models import MPTTModel, TreeForeignKey
+from mptt.admin import MPTTModelAdmin
 import uuid
 import os
 # Create your models here.
-
-
 
 def get_file_path(instance, filename):
 	ext = filename.split('.')[-1]
@@ -13,8 +12,12 @@ def get_file_path(instance, filename):
 	return os.path.join('shoes_images', filename)
 
 
-class Category(models.Model):
-	name = models.CharField(max_length=200)
+class Category(MPTTModel):
+	name = models.CharField(max_length=200, unique=True)
+	parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
+
+	class MPTTMeta:
+		order_insertion_by = ['name']
 
 	def __unicode__(self):
 		return self.name
@@ -39,7 +42,6 @@ class ShoesPhotos(models.Model):
 	image_tag.allow_tags = True
 
 
-
 class ShoesPhotosAdmin(admin.ModelAdmin):
 	list_display = ['images', 'image_tag']
 	search_fields = ['images']
@@ -55,7 +57,7 @@ class Shoes(models.Model):
 	description = models.CharField(max_length=150, blank=True, null=True)
 	category_name = models.ManyToManyField(Category)
 	date = models.DateTimeField(null=True, auto_now_add=True)
-	new_price = models.IntegerField(null=True, blank=True)
+	quantity = models.IntegerField(default=0)
 
 	def __unicode__(self):
 		return self.name

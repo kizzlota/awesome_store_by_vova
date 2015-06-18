@@ -1,13 +1,29 @@
+﻿
+
 {% extends 'base.html' %}
 
 
 
 {% block leftList %}
-{% for index in category %}
+{#{% for index in category %}#}
+{##}
+{#    <a href="/?c={{ index.name }}" class="list-group-item">       {{ index.name }}</a>#}
+{##}
+{# {% endfor %}#}
 
-    <a href="/?c={{ index.name }}" class="list-group-item">       {{ index.name }}</a>
-
- {% endfor %}
+    {% load mptt_tags %}
+<ul>
+    {% recursetree category %}
+        <li>
+           <a href="/?c={{ node.name }}">{{ node.name }}</a>
+            {% if not node.is_leaf_node %}
+                <ul class="children">
+                    {{ children }}
+                </ul>
+            {% endif %}
+        </li>
+    {% endrecursetree %}
+</ul>
 {% endblock %}
 
 
@@ -29,7 +45,12 @@
       <div class="caption">
         <h3>{{ shoe.name }}</h3>
         <p>{{ shoe.decription }}</p>
-        <p><a href="#" class="btn btn-primary" role="button">{{ shoe.price }}</a><a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
+        <p><a href="#" class="btn btn-primary" role="button">{{ shoe.price }}</a>
+            {%  if shoe.quantity > 0 %}
+                  <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
+          {%  else %}
+                   <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">нема в наявності</a> </p>
+          {% endif %}
       </div>
  </div>
  </div>

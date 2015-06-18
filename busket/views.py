@@ -18,9 +18,8 @@ def new_order(request):
 	            request.META.get('PROCESSOR_IDENTIFIER')
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 	i_all = 0
-	for ord in orders:
-		for i in ord.order_id.all():
-			i_all += i.price
+	for ord in basket:
+		i_all += ord.shoes_id.price
 
 	if request.method == 'POST':                    # якщо метод з форми є POST тоді наступне
 		name_form = OrderForm(request.POST)         # свторюємо PostForm з даними з форми

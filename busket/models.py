@@ -29,6 +29,15 @@ class OrderModel(models.Model):
 	user_mail = models.EmailField(max_length=100)
 	order_id = models.ManyToManyField(Shoes)
 
+	def save(self, *args, **kwargs):
+
+		super(OrderModel, self).save(*args, **kwargs)
+
+		print self.user_mail
+		for r in self.order_id.all():
+			print r
+
+
 
 class OrderAdmin(admin.ModelAdmin):
 	list_display = ['id', 'user_name', 'user_phone', 'user_address', 'user_mail']
