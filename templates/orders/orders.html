@@ -9,7 +9,7 @@
     <div class="media" xmlns="http://www.w3.org/1999/html">
   <div class="media-left media-middle">
     <a href="#">
-      <img class="media-object" src="/media/{{ ord.shoes_id.main_image }}" width="64px" alt="...">
+      <img class="media-object" src="/media/{{ ord.shoes_id.main_image }}"  width="64px" alt="...">
     </a>
 
   </div>
@@ -21,8 +21,19 @@
     <h4 class="media-heading">{{ ord.shoes_id.price }}</h4>
 
   </div>
+    <div class="media-right">
+        <label for="{{ ord.shoes_id.id }}">Кількість</label>
+        <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ ord.shoes_id.id }}" min="1" type="number"
+               value="1" max="{{ ord.shoes_id.quantity }}"></div>
     </div>
 
+<script>
+  function maxLengthCheck(object)
+  {
+    if (object.value.length > object.maxLength)
+      object.value = object.value.slice(0, object.maxLength)
+  }
+</script>
 
 {% endfor %}
 
@@ -42,8 +53,39 @@
         <br> {{ user_info.user_phone.errors }}
         {{ user_info.user_address.label }}{{ user_info.user_address }}
         <br>{{ user_info.user_address.errors }}
+ <script>
+    function updateInput(){
+
+        var elements = document.getElementsByClassName("ShoeQuan");
+        var names = {};
+        for(var i=0; i<elements.length; i++) {
+            names[elements[i].id] = elements[i].value;
+        }
+    // console.log(names);
+     document.getElementById("id_shoes_quantity").value = JSON.stringify(names);
+    }
+
+
+</script>
+
+ <input id="id_shoes_quantity" maxlength="550" name="shoes_quantity"  type="text"/>
+<script>
+
+            var elements = document.getElementsByClassName("ShoeQuan");
+        var names = {};
+        for(var i=0; i<elements.length; i++) {
+            names[elements[i].id] = elements[i].value;
+        }
+
+       document.getElementById("id_shoes_quantity").value = JSON.stringify(names);
+
+</script>
 
     <div style="display: none;">
+     <br />
+
+
+
         {{ user_info.order_id.label }}
         <select multiple="multiple" id="id_order_id" name="order_id">
         {% for ord in basket_info %}

@@ -1,5 +1,5 @@
     {% for bas in basket %}
-      {{ bas.id }}  {{ bas.shoes_id.name }} <a href="/busket_del/?id={{ bas.id }}" class="btn btn-primary" role="button">del</a> <br>
+      {{ bas.id }}  {{ bas.shoes_id.name }} <a href="/busket_del/?id={{ bas.id }}" >X</a> <br>
      {% endfor %}
 
      <form action="new_user_order/" method="POST"><br>

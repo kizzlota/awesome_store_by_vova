@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib import admin
 from catalog.models import Shoes
+from django.db.models.signals import m2m_changed
+from django.dispatch import receiver
 
 
 # Create your models here.
@@ -27,24 +29,27 @@ class OrderModel(models.Model):
 	user_phone = models.CharField(max_length=100)
 	user_address = models.TextField(max_length=350)
 	user_mail = models.EmailField(max_length=100)
+	shoes_quantity = models.CharField(max_length=550, blank=True, null=True)
 	order_id = models.ManyToManyField(Shoes)
 
 	def save(self, *args, **kwargs):
-
 		super(OrderModel, self).save(*args, **kwargs)
+		self.test1()
 
-		print self.user_mail
-		for r in self.order_id.all():
-			print r
-
-
+	def test1(self):
+		print 'true' + self.shoes_quantity
 
 class OrderAdmin(admin.ModelAdmin):
 	list_display = ['id', 'user_name', 'user_phone', 'user_address', 'user_mail']
 	search_fields = ['user_name', 'user_phone', 'user_address']
 
 
+# @receiver(models.signals.post_save, sender=OrderModel)
+# def quantity_changer(sender, instance, **kwargs):
+# 	print instance.shoes_quantity
+# 	for i in instance.order_id.all():
+# 		print i.id
+
+
 admin.site.register(BasketModel, BasketAdmin)
 admin.site.register(OrderModel, OrderAdmin)
-
-
