@@ -2,7 +2,10 @@ from django.db import models
 from django.contrib import admin
 from catalog.models import Shoes
 from django.db.models.signals import m2m_changed
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
+import json
+
 
 
 # Create your models here.
@@ -31,6 +34,7 @@ class OrderModel(models.Model):
 	user_mail = models.EmailField(max_length=100)
 	shoes_quantity = models.CharField(max_length=550, blank=True, null=True)
 	order_id = models.ManyToManyField(Shoes)
+	#user_hash = models.CharField(blank=True, null=True, max_length=200)
 
 	def save(self, *args, **kwargs):
 		super(OrderModel, self).save(*args, **kwargs)
@@ -38,6 +42,22 @@ class OrderModel(models.Model):
 
 	def test1(self):
 		print 'true' + self.shoes_quantity
+		x = self.shoes_quantity
+		x = json.loads(x)
+		for i, j in x.iteritems():
+			id_in_shoes = Shoes.objects.get(id=i)
+			id_in_shoes.quantity -= int(j)
+			id_in_shoes.save()
+			print i, j
+
+	# @receiver(post_save, sender=OrderModel)
+	# def clear_busket_after(instance, **kwargs):
+	#profile_hash = BasketModel.objects.filter()
+
+
+
+
+
 
 class OrderAdmin(admin.ModelAdmin):
 	list_display = ['id', 'user_name', 'user_phone', 'user_address', 'user_mail']

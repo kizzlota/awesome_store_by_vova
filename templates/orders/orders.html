@@ -9,20 +9,20 @@
     <div class="media" xmlns="http://www.w3.org/1999/html">
   <div class="media-left media-middle">
     <a href="#">
-      <img class="media-object" src="/media/{{ ord.shoes_id.main_image }}"  width="64px" alt="...">
+      <img class="img-rounded" src="/media/{{ ord.shoes_id.main_image }}"  width="98px" alt="...">
     </a>
 
   </div>
   <div class="media-body">
-    <h4 class="media-heading">{{ ord.shoes_id.name }}</h4>
+    <h4 class="media-heading" style="font-family: cursive">Назва моделі: {{ ord.shoes_id.name }}</h4>
 
   </div>
       <div class="media-right">
-    <h4 class="media-heading">{{ ord.shoes_id.price }}</h4>
+    <h4 class="media-heading" style="font-size: medium">Ціна: {{ ord.shoes_id.price }}</h4>
 
   </div>
     <div class="media-right">
-        <label for="{{ ord.shoes_id.id }}">Кількість</label>
+        <label for="{{ ord.shoes_id.id }}">Кількість</label> <button class="button"><a href="/busket_del/?id={{ ord.id }}" >видалити з кошика</a></button> <br>
         <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ ord.shoes_id.id }}" min="1" type="number"
                value="1" max="{{ ord.shoes_id.quantity }}"></div>
     </div>
@@ -36,22 +36,22 @@
 </script>
 
 {% endfor %}
+<br>
+    <p class="text-info" style="background-color: lightgrey">Загальна сума {{ full_price }}</p>
+<hr>
+    <form action="/orders/new/" method="POST" class="form-horizontal" role="form">
+    <label for="your_name">дані покупця : </label>
+    <ul class="list-group">
 
-    <li class="list-group-item">Загальна сума {{ full_price }}</li>
-
-    <form action="/orders/new/" method="POST">
-    <label for="your_name">Your name: </label>
-    <ul>
-       {% csrf_token %}
         {{ user_info.non_field_errors }}
-        {{ user_info.user_name.label_tag }}{{ user_info.user_name }}
-      <br>
-        {{ user_info.user_mail.label }}{{ user_info.user_mail }}
-        <br> {{ user_info.user_mail.errors }}
-        <br>
-        {{ user_info.user_phone.label }}{{ user_info.user_phone }}
-        <br> {{ user_info.user_phone.errors }}
-        {{ user_info.user_address.label }}{{ user_info.user_address }}
+       <li class="list-group-item-info"> {{ user_info.user_name.label_tag }}{{ user_info.user_name }}</li>
+
+       <li class="list-group-item-info"> {{ user_info.user_mail.label }}{{ user_info.user_mail }}</li>
+        {{ user_info.user_mail.errors }}
+
+        <li class="list-group-item-info"> {{ user_info.user_phone.label }}{{ user_info.user_phone }}</li>
+        {{ user_info.user_phone.errors }}
+       <li class="list-group-item-info" >{{ user_info.user_address.label }}{{ user_info.user_address }}</li>
         <br>{{ user_info.user_address.errors }}
  <script>
     function updateInput(){
@@ -95,7 +95,7 @@
     </div>
 
         </ul>
-    <input type="submit" value="OK">
+    <input type="submit" value="OK" class="btn btn-default">
 </form>
 
 

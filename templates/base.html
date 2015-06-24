@@ -35,6 +35,13 @@
                 </div>
                 <button type="submit" class="btn btn-default">Submit</button>
               </form>
+                 <form action="/orders/find/" method="POST" class="navbar-form navbar-left" >
+                <div class="form-group">
+                    {% csrf_token %}
+                  <input id="email_user" name="email_user" type="email" class="form-control" placeholder="e-mail">
+                </div>
+                <button type="submit" class="btn btn-default">find previous orders</button>
+              </form>
               <ul class="nav navbar-nav navbar-right">
                 <li><a href="/admin" target="_blank">Admin</a></li>
                   <li><a href="/orders/new" target="_blank">Orders</a> </li>

@@ -48,27 +48,25 @@
     <!--
     ---------------------------------------------------------------------------------------------------------------
     -->
-    {% for shoe in images_few %}
+    <div class="list-group" style="border:thin">
+         <ul class="list-group">
+        {{ total_sum.total }}
+    {%  for ord in users_list_orders %}
 
-    <div class="col-sm-5 col-md-3">
+           <li class="list-group-item list-group-item-success"> <span style="margin: 0 10px 0 0; ">
+               <b>покупець:</b> {{ ord.user_name }}</span>
+               <span style="border: thin"> <b>номер замовлення:</b> {{ ord.id }}</span>
+               <span style="border: thin"> <b>сума замовлення:</b> {{ ord.total }}</span></li>
+           <li class="list-group-item list-group-item-info">{{ ord.user_phone }} </li>
+      {% for new_ord in ord.order_id.all %}
+          <li class="list-group-item list-group-item-info">модель: {{ new_ord.name }} ціна: {{ new_ord.price }} </li>
+       <li class="list-group-item list-group-item-warning"> <img src="/media/{{ new_ord.main_image }}" width="120px" ></li>
+          {% endfor %}
 
-      <div class="caption">
-        <p>{{ shoe.decription }}</p>
-
-            {%  if shoe.quantity > 0 and not shoe.id in id_list %}
-                  <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
-                {% elif shoe.id in id_list %}
-                    already in busket
-          {%  else %}
-                   <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">nema</a> </p>
-          {% endif %}
-      </div>
- </div>
-
-
-{% endfor %}
+        <br>
+    {%  endfor %}
+        </ul>
     </div>
-
-
-
+   </div>
+    <p>{{ all_price }}</p>
 {%  endblock %}

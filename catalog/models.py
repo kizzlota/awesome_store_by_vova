@@ -52,7 +52,7 @@ class Shoes(models.Model):
 	name = models.CharField(max_length=200)
 	image = models.ManyToManyField(ShoesPhotos, blank=True)
 	main_image = models.ImageField(blank=True, null=True, upload_to=get_file_path,
-	                               default="/static/img/shoesimage.jpg")  # comix
+	                               default="/static/img/shoesimage.jpg")
 	price = models.IntegerField()
 	description = models.CharField(max_length=150, blank=True, null=True)
 	category_name = models.ManyToManyField(Category)
@@ -68,6 +68,12 @@ class Shoes(models.Model):
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 
+	def cat_name_for_shoe(self):
+		return self.category_name.all()
+
+	cat_name_for_shoe.short_description = 'category'
+	cat_name_for_shoe.allow_tag = True
+
 class PropertyImageInline(admin.TabularInline):
 	model = Shoes.image.through
 	extra = 3
@@ -81,8 +87,8 @@ class PropertyImageInline(admin.TabularInline):
 
 
 class ShoesAdmin(admin.ModelAdmin):
-	list_display = ["id", "name", "price", "date", "image_tag"]
-	search_fields = ["name", "price"]
+	list_display = ["id", "name", "price", "date", "image_tag", "cat_name_for_shoe", "quantity"]
+	search_fields = ["name", "price", "quantity"]
 	# filter_horizontal = ('image',)
 	exclude = ('image',)
 	inlines = [PropertyImageInline, ]

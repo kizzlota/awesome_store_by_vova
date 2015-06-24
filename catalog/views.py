@@ -2,7 +2,6 @@
 from django.shortcuts import render
 from models import Shoes, Category, ShoesPhotos
 from django.shortcuts import render_to_response
-from photologue.models import Gallery
 import hashlib
 from busket.models import BasketModel
 from django.shortcuts import redirect
@@ -16,7 +15,7 @@ def true_busket(request):
 
 
 def index(request):
-	category = request.GET.get('c', u'Чоботи')
+	category = request.GET.get('c', u'mans')
 	list_category = Category.objects.all()
 	shoes = Shoes.objects.filter(category_name__name=category).order_by('-id')
 	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
