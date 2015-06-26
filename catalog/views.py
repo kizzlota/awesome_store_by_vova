@@ -5,6 +5,9 @@ from django.shortcuts import render_to_response
 import hashlib
 from busket.models import BasketModel
 from django.shortcuts import redirect
+import datetime
+from django.core import signing
+import pickle
 # Create your views here.
 
 
@@ -21,10 +24,17 @@ def index(request):
 	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
 	            request.META.get('PROCESSOR_IDENTIFIER')
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
+
 	id_list = []
 	for ids in basket:
 		id_list.append(ids.shoes_id.id)
-	return render(request, 'catalog/index.html', {'category': list_category, 'shoes': shoes, 'basket': basket, 'id_list': id_list})
+	hoes = []
+	if 'id_list_basket' in request.COOKIES:
+		id_list_cook_true = signing.loads(request.COOKIES['id_list_basket'])
+		hoes = Shoes.objects.filter(id__in=id_list_cook_true)  # filter ne vyvodyt odnalovi zna4ennia, id__in = vylorystovuetis dlia filtruvannia bagatiox zna4en lista
+	asd = render(request, 'catalog/index.html', {'category': list_category, 'shoes': shoes, 'basket': basket, 'id_list': id_list, 'hoes': hoes})
+	asd.set_cookie('favarite_color', 'red', max_age=8000)  # setting index cookie , not reasonable
+	return asd
 
 
 def out_news(request):
@@ -32,29 +42,43 @@ def out_news(request):
 	return render_to_response('catalog/news.html', {'outline_news': shoes_news, 'category': Category.objects.all()})
 
 
-def gallerey(request):
-	photo = Gallery.objects.all()
-	print photo.__dict__
-	return render_to_response('catalog/text.html', {'photos': photo})
-
-
 def busket(request):
-	id1 = request.GET.get('id')
+	id1 = request.GET.get('id', '1')  # if peyxodyt NOne to po default vstanovyt 1
 	id2 = request.META.get('HTTP_REFERER')
 	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
 	            request.META.get('PROCESSOR_IDENTIFIER')
 	shoes = Shoes.objects.get(id=id1)
 	date = BasketModel(data_user_hash=hashlib.sha256(user_date).hexdigest(), quantity=1, shoes_id=shoes)
 	date.save()
-	return redirect(id2)
+	asd = redirect(id2)  # HttpResponse
+	if not 'id_list_basket' in request.COOKIES:
+		id_list = []
+		id_list.append(id1)
+		id_list_cook_true = signing.dumps(id_list)
+	else:
+		id_list_cook = signing.loads(request.COOKIES['id_list_basket'])
+		id_list_cook.append(id1)
+		id_list_cook_true = signing.dumps(id_list_cook)
+
+	user_cookies_value = signing.dumps(id1)
+	asd.set_cookie('id_list_basket', id_list_cook_true, max_age=8000)
+	return asd
 
 
 def busket_del(request):
 	idl = request.GET.get('id')
+	id2 = request.GET.get('idc')
 	queryset = BasketModel.objects.filter(id=idl)
 	queryset.delete()
-	return redirect(request.META.get('HTTP_REFERER'))
+	update_cookie = redirect(request.META.get('HTTP_REFERER'))
+	if 'id_list_basket' in request.COOKIES and 'idc' in request.GET:
+		id_list_cook = signing.loads(request.COOKIES['id_list_basket'])
 
+		id_list_cook.remove(id2)
+		id_list_cook_true = signing.dumps(id_list_cook)
+		update_cookie.set_cookie('id_list_basket', id_list_cook_true, max_age=8000)
+
+	return update_cookie
 
 def shoe(request, shoe_id):
 	images = Shoes.objects.filter(id=shoe_id)

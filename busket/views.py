@@ -9,6 +9,7 @@ from forms import OrderForm
 from django.core.context_processors import csrf
 from django.http import HttpResponseRedirect
 from django.db.models import Sum
+from django.core import signing
 
 
 def new_order(request):
@@ -50,17 +51,7 @@ def finded_orders(request):
 
 
 def new_user_order(request):
-	form = OrderForm()
-	user_data = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
-	            request.META.get('PROCESSOR_IDENTIFIER')
-	basket_hash = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_data).hexdigest())
-	if request.method == 'POST':
-		form = OrderForm(request.POST)
-		if form.is_valid():
-			post = form.save()
-			post.save()
-			return redirect('/')
-	asd = OrderModel.objects.filter(id=11)
-	frg = OrderModel.objects.all()
-
-	return render(request, 'catalog/for_test.html', {'basket_info_test': basket_hash, 'form': form, 'asd': asd, 'frg': frg})
+	if "basket_cook" in request.COOKIES:
+		get_cookies = request.COOKIES['basket_cook']
+		fotos = Shoes.objects.filter(name=get_cookies)
+	return render(request, 'catalog/for_test.html', {'frg': get_cookies, 'fotos': fotos})

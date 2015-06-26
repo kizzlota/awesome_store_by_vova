@@ -40,6 +40,7 @@
     <p class="text-info" style="background-color: lightgrey">Загальна сума {{ full_price }}</p>
 <hr>
     <form action="/orders/new/" method="POST" class="form-horizontal" role="form">
+    {% csrf_token %}
     <label for="your_name">дані покупця : </label>
     <ul class="list-group">
 

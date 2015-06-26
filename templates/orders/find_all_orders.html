@@ -2,25 +2,30 @@
 {%  include '' %}
 
 {% block leftList %}
-{% for index in category %}
+}
 
-    <a href="/?c={{ index.name }}" class="list-group-item">   {{ index.name }}</a>
-
- {% endfor %}
-{% endblock %}
-
-
-{% block busket %}
-    {% include 'catalog/busket.html' %}
 {% endblock %}
 
 
 
 {%  block content %}
 
+<script type="text/javascript">
+function showSpoiler(obj)
+    {
+    var inner = obj.parentNode.getElementsByTagName("div");
+    if (inner.style.display == "none")
+        inner.style.display = "";
+    else
+        inner.style.display = "none";
+    }
+</script>
+
     <div>
         {%  for pic in images_few %}
+
             <img src="/media/{{ pic.main_image }}" width="480px" /> <br>
+
 
             {% for pic_few in pic.image.all %}
                 <img src="/media/{{ pic_few.images }}" width="260px" />
@@ -38,8 +43,10 @@
 
             </ul>
             </div>
+
+            </div>
         {% endfor %}
-    </div>
+
     <div>
         {%  for i in pictures_shoes %}
         <img src="/media/{{ i }}" width="240px" />
@@ -55,16 +62,21 @@
 
            <li class="list-group-item list-group-item-success"> <span style="margin: 0 10px 0 0; ">
                <b>покупець:</b> {{ ord.user_name }}</span>
-               <span style="border: thin"> <b>номер замовлення:</b> {{ ord.id }}</span>
+
+               <a href="#" onclick="showSpoiler(this);"> <b>номер замовлення:</b> {{ ord.id }}</a>
+
                <span style="border: thin"> <b>сума замовлення:</b> {{ ord.total }}</span></li>
+
            <li class="list-group-item list-group-item-info">{{ ord.user_phone }} </li>
+         <div class="inner" >
       {% for new_ord in ord.order_id.all %}
           <li class="list-group-item list-group-item-info">модель: {{ new_ord.name }} ціна: {{ new_ord.price }} </li>
        <li class="list-group-item list-group-item-warning"> <img src="/media/{{ new_ord.main_image }}" width="120px" ></li>
           {% endfor %}
-
+  </div>
         <br>
     {%  endfor %}
+
         </ul>
     </div>
    </div>
