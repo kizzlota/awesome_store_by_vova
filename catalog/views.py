@@ -7,13 +7,14 @@ from busket.models import BasketModel
 from django.shortcuts import redirect
 import datetime
 from django.core import signing
-import pickle
+from forms import RegisterForm
+
 # Create your views here.
 
 
 def true_busket(request):
-	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
-	            request.META.get('PROCESSOR_IDENTIFIER')
+	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get('HTTP_USER_AGENT', 'chrome') + \
+	                request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	return BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 
 
@@ -21,8 +22,8 @@ def index(request):
 	category = request.GET.get('c', u'mans')
 	list_category = Category.objects.all()
 	shoes = Shoes.objects.filter(category_name__name=category).order_by('-id')
-	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
-	            request.META.get('PROCESSOR_IDENTIFIER')
+	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get('HTTP_USER_AGENT', 'chrome') + \
+	            request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 
 	id_list = []
@@ -45,8 +46,8 @@ def out_news(request):
 def busket(request):
 	id1 = request.GET.get('id', '1')  # if peyxodyt NOne to po default vstanovyt 1
 	id2 = request.META.get('HTTP_REFERER')
-	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
-	            request.META.get('PROCESSOR_IDENTIFIER')
+	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
+		'HTTP_USER_AGENT', 'chrome') + request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	shoes = Shoes.objects.get(id=id1)
 	date = BasketModel(data_user_hash=hashlib.sha256(user_date).hexdigest(), quantity=1, shoes_id=shoes)
 	date.save()
@@ -62,6 +63,7 @@ def busket(request):
 
 	user_cookies_value = signing.dumps(id1)
 	asd.set_cookie('id_list_basket', id_list_cook_true, max_age=8000)
+
 	return asd
 
 
@@ -84,3 +86,8 @@ def shoe(request, shoe_id):
 	images = Shoes.objects.filter(id=shoe_id)
 
 	return render(request, 'catalog/shoe_individual.html', {'images_few': images, 'basket': true_busket(request)})
+
+def registration(request):
+	reg_form = RegisterForm()
+
+	return render(request, 'catalog/registration.html', {'reg_form': reg_form})

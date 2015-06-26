@@ -29,6 +29,7 @@ class Migration(migrations.Migration):
                 ('user_phone', models.CharField(max_length=100)),
                 ('user_address', models.TextField(max_length=350)),
                 ('user_mail', models.EmailField(max_length=100)),
+                ('shoes_quantity', models.CharField(max_length=550, null=True, blank=True)),
                 ('order_id', models.ManyToManyField(to='catalog.Shoes')),
             ],
         ),

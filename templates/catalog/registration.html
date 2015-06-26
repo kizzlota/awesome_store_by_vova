@@ -1,0 +1,32 @@
+
+
+{% extends 'base.html' %}
+
+
+
+{% block leftList %}
+{#{% for index in category %}#}
+{##}
+{#    <a href="/?c={{ index.name }}" class="list-group-item">       {{ index.name }}</a>#}
+{##}
+{# {% endfor %}#}
+
+{% endblock %}
+
+
+ {% block busket %}
+{% include 'catalog/busket.html' %}
+ {% endblock %}
+
+
+
+
+{% block content %}
+
+REG PAGE
+
+    {{ reg_form.as_p }}
+{% endblock %}
+
+
+

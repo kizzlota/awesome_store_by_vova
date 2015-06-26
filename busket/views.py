@@ -13,10 +13,12 @@ from django.core import signing
 
 
 def new_order(request):
+	order_cookie = signing.loads(request.COOKIES['id_list_basket'])
+	find_in_basket = Shoes.objects.filter(id__in=order_cookie)
 
 	orders = OrderModel.objects.all()
-	user_date = request.META.get('USERNAME') + request.META.get('REMOTE_ADDR') + request.META.get('HTTP_USER_AGENT') + \
-	            request.META.get('PROCESSOR_IDENTIFIER')
+	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
+		'HTTP_USER_AGENT', 'chrome') + request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 	i_all = 0
 	for ord in basket:
@@ -33,7 +35,7 @@ def new_order(request):
 	else:
 		name_form = OrderForm()
 
-	return render(request, 'orders/orders.html', {'orders_outlines': orders, 'full_price': i_all, 'user_info': name_form, 'basket_info': basket})
+	return render(request, 'orders/orders.html', {'orders_outlines': orders, 'full_price': i_all, 'user_info': name_form, 'basket_info': basket, 'find_in_basket': find_in_basket})
 
 
 def finded_orders(request):

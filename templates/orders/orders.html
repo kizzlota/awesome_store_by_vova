@@ -2,12 +2,22 @@
 
 
 {% block content %}
+ <hr>
+    <div class="text-info" style="border: 2px solid greenyellow">
+     {% for i in find_in_basket %}
+        <p><b> назва моделі: {{ i.name }}</b>Ціна:{{ i.price }}</p>
+         <img src="/media/{{ i.main_image }}" width="240px">
+          <button class="button"><a href="/busket_del/?idc={{ i.id }}" >видалити з кошика</a></button>
 
-
+         {% endfor %}
+  <br>
+  <br>
+    </div>
 {% for ord in basket_info %}
 
     <div class="media" xmlns="http://www.w3.org/1999/html">
   <div class="media-left media-middle">
+
     <a href="#">
       <img class="img-rounded" src="/media/{{ ord.shoes_id.main_image }}"  width="98px" alt="...">
     </a>
