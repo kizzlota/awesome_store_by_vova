@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
-from models import Shoes, Category, ShoesPhotos
-from django.shortcuts import render_to_response
+from models import Shoes, Category, ShoesPhotos, User, RegistrationCode
+from django.shortcuts import render_to_response, HttpResponseRedirect
 import hashlib
 from busket.models import BasketModel
 from django.shortcuts import redirect
 import datetime
 from django.core import signing
 from forms import RegisterForm
+from mailing import send_email
 
 # Create your views here.
 
@@ -88,6 +89,34 @@ def shoe(request, shoe_id):
 	return render(request, 'catalog/shoe_individual.html', {'images_few': images, 'basket': true_busket(request)})
 
 def registration(request):
-	reg_form = RegisterForm()
-
+	if request.method == 'POST':
+		reg_form = RegisterForm(request.POST)
+		if reg_form.is_valid():
+			data = reg_form.cleaned_data
+			user = User.objects.create_user(username=data['username'], email=data['email'])
+			user.set_password(data['password'])
+			# reg_form.save_m2m()
+			user.save()
+			send_email(user, prefix='signup_email')
+			return HttpResponseRedirect('/new_user')
+	else:
+		reg_form = RegisterForm()
 	return render(request, 'catalog/registration.html', {'reg_form': reg_form})
+
+
+def registration_new_user(request):
+
+	return render(request, 'catalog/registration1.html', )
+
+
+def sign_in_user(request):
+		#reg_code = RegistrationCode.objects.get(code='')
+		sign_form = RegisterForm(request.POST)
+		if request.method == 'POST':
+			if sign_form.is_valid():
+				data = sign_form.cleaned_data
+				print data
+			else:
+				sign_form = RegisterForm()
+
+		return render(request, 'catalog/sign_in.html', {'sign_form': sign_form})

@@ -10,5 +10,7 @@ urlpatterns = [
 	url(r'^shoe_ind/(?P<shoe_id>\d+)/$', 'catalog.views.shoe', name='shoe'),
 	url(r'^test_app/', 'testing_issues.views.testing', name='testing'),
 	url(r'^registration/', 'catalog.views.registration', name='registration'),
+	url(r'^new_user/', 'catalog.views.registration_new_user', name='registration_new_user'),
+	url(r'^sign_in/', 'catalog.views.sign_in_user', name='sign_in_user'),
 
 ]

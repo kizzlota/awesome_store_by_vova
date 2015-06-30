@@ -5,4 +5,4 @@ from catalog.models import User
 class RegisterForm(ModelForm):
 	class Meta:
 		model = User
-		fields = '__all__'
+		fields = 'username', 'password', 'email', 'first_name', 'last_name', 'social_img_url', 'profile_image', 'user_bio'

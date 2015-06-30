@@ -160,6 +160,15 @@ class ShoesAdmin(admin.ModelAdmin):
 	inlines = [PropertyImageInline, ]
 
 
+class RegistrationCode(models.Model):
+	code = models.CharField(max_length=255)
+	username = models.ForeignKey(User)
+	date = models.DateTimeField(auto_now_add=True)
+
+class RegistrationCodeAdmin(admin.ModelAdmin):
+	list_display = ['code', 'username', 'date']
+
+admin.site.register(RegistrationCode, RegistrationCodeAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Shoes, ShoesAdmin)
 admin.site.register(ShoesPhotos, ShoesPhotosAdmin)

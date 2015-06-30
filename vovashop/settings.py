@@ -129,3 +129,15 @@ STATICFILES_DIRS = (
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# email
+
+
+DEFAULT_EMAIL_FROM = "Awesome store <kizzlota.htc@gmail.com>"
+DEFAULT_EMAIL_BCC = ''
+#
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'admin@remindsbirthdays.com'
+EMAIL_HOST_PASSWORD = '1z2x3c+-'
+EMAIL_USE_TLS = True

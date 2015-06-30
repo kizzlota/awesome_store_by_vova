@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{%  include '' %}
+
+    {% block leftList %}
+        {% for index in category %}
+
+            <a href="/?c={{ index.name }}" class="list-group-item">   {{ index.name }}</a>
+
+        {% endfor %}
+    {% endblock %}
+
+
+    {% block busket %}
+        {% include 'catalog/busket.html' %}
+    {% endblock %}
+
+
+
+{%  block content %}
+
+    <h3> Thank You for registration </h3>
+    <h5>chekout mail box</h5>
+
+
+{%  endblock %}

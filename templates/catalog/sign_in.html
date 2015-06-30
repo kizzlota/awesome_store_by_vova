@@ -1,0 +1,27 @@
+
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+SIGN_IN_PAGE
+
+    <form action="/sign_in/" method="POST" class="form-horizontal" role="form" xmlns="http://www.w3.org/1999/html">
+    {% csrf_token %}
+    <label for="your_username">login : </label>
+        <ul class="list-group">
+            <li class="list-group-item-info" >username: {{ sign_form.username }}</li>
+            <li class="list-group-item-info" >password: {{ sign_form.password }}</li>
+
+        </ul>
+        <input type="submit" value="OK" class="btn btn-default">
+
+    </form>
+
+
+
+{% endblock %}
+
+
+
