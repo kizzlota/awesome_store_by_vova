@@ -63,6 +63,8 @@ ROOT_URLCONF = 'vovashop.urls'
 
 AUTH_USER_MODEL = 'catalog.User'
 
+LOGIN_URL = '/sign_in/'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

@@ -7,18 +7,29 @@
 
 SIGN_IN_PAGE
 
-    <form action="/sign_in/" method="POST" class="form-horizontal" role="form" xmlns="http://www.w3.org/1999/html">
+    <form action="/sign_in/" method="POST" class="form-horizontal" role="form">
     {% csrf_token %}
     <label for="your_username">login : </label>
         <ul class="list-group">
-            <li class="list-group-item-info" >username: {{ sign_form.username }}</li>
-            <li class="list-group-item-info" >password: {{ sign_form.password }}</li>
+            <input id="your_username" type="text", name="your_username" value="{{ username }}">
+            <input id="your_password" type="password", name="your_password" value="{{ password }}">
 
         </ul>
         <input type="submit" value="OK" class="btn btn-default">
 
     </form>
 
+<br />
+   <form action="/reg/second/" method="POST" class="form-horizontal" role="form">
+    {% csrf_token %}
+  {{ form_in.as_p }}
+
+     <br />
+
+
+         <input type="submit" value="OK" class="btn btn-default">
+
+</form>
 
 
 {% endblock %}

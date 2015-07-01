@@ -1,14 +1,17 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from models import Shoes, Category, ShoesPhotos, User, RegistrationCode
+from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render_to_response, HttpResponseRedirect
 import hashlib
 from busket.models import BasketModel
 from django.shortcuts import redirect
 import datetime
 from django.core import signing
-from forms import RegisterForm
+from forms import RegisterForm, RegisterFormSecond
 from mailing import send_email
+from django.template import RequestContext
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
@@ -90,6 +93,10 @@ def shoe(request, shoe_id):
 
 def registration(request):
 	if request.method == 'POST':
+		id_user = request.POST.get('username')
+		# print id_user
+		# info_form = RegistrationCode.objects.get(username__username=id_user)
+		# print info_form
 		reg_form = RegisterForm(request.POST)
 		if reg_form.is_valid():
 			data = reg_form.cleaned_data
@@ -97,8 +104,11 @@ def registration(request):
 			user.set_password(data['password'])
 			# reg_form.save_m2m()
 			user.save()
+			loginuser = authenticate(username=data['username'], password=data['password'])
+			login(request, loginuser)
 			send_email(user, prefix='signup_email')
-			return HttpResponseRedirect('/new_user')
+
+			return HttpResponseRedirect('/reg/second/')
 	else:
 		reg_form = RegisterForm()
 	return render(request, 'catalog/registration.html', {'reg_form': reg_form})
@@ -109,14 +119,45 @@ def registration_new_user(request):
 	return render(request, 'catalog/registration1.html', )
 
 
-def sign_in_user(request):
-		#reg_code = RegistrationCode.objects.get(code='')
-		sign_form = RegisterForm(request.POST)
-		if request.method == 'POST':
-			if sign_form.is_valid():
-				data = sign_form.cleaned_data
-				print data
+def registration_second(request):
+	if request.user.is_authenticated():
+		if request.user.is_active:
+			if request.method == 'POST':
+				reg_form_sec = RegisterFormSecond(data=request.POST, instance=request.user)
+				if reg_form_sec.is_valid():
+					user = reg_form_sec.save(commit=False)
+					user.save()
+
+					return HttpResponseRedirect('/new_user')
 			else:
-				sign_form = RegisterForm()
+				reg_form = RegisterFormSecond()
+
+			return render(request, 'catalog/sign_in.html', {'form_in': reg_form})
+
+	else:
 
 		return render(request, 'catalog/sign_in.html', {'sign_form': sign_form})
+
+
+def sign_in_user(request):
+	username = request.POST.get('your_username')
+	password = request.POST.get('your_password')
+	user = authenticate(username=username, password=password)
+	if user is not None:
+		login(request, user)
+		return HttpResponseRedirect('/')
+	else:
+		logout(request)
+
+	return render(request, 'catalog/sign_in.html', {})
+
+@login_required
+def user_logout(request):
+    # Since we know the user is logged in, we can now just log them out.
+    logout(request)
+
+    # Take the user back to the homepage.
+    return HttpResponseRedirect('/')
+
+def base_page(request):
+	return render(request, 'base.html', context_instance=RequestContext(request))

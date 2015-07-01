@@ -150,8 +150,6 @@ class PropertyImageInline(admin.TabularInline):
 	row_name.allow_tags = True
 
 
-
-
 class ShoesAdmin(admin.ModelAdmin):
 	list_display = ["id", "name", "price", "date", "image_tag", "cat_name_for_shoe", "quantity"]
 	search_fields = ["name", "price", "quantity"]

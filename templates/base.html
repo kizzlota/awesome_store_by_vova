@@ -45,8 +45,13 @@
                 <li><a href="/admin" target="_blank">Admin</a></li>
                   <li><a href="/orders/new" target="_blank">Orders</a> </li>
                   <li><a href="/registration/">Registration</a></li>
-                  <li><a href="/sign_in/">Sign in</a></li>
 
+                  {% if user.is_authenticated %}
+                    <li ><a>Hi {{ user.username }}</a></li>
+                     <li ><a href="/logout">log out</a></li>
+                  {% else %}
+                     <li ><a href="/sign_in/">Hi anonymous</a></li>
+                  {% endif %}
               </ul>
             </div><!-- /.navbar-collapse -->
           </div><!-- /.container-fluid -->
