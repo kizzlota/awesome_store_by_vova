@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from models import OrderModel, Shoes
+from catalog.models import User
 from django.shortcuts import render_to_response
 import hashlib
 from busket.models import BasketModel
@@ -57,3 +58,6 @@ def new_user_order(request):
 		get_cookies = request.COOKIES['basket_cook']
 		fotos = Shoes.objects.filter(name=get_cookies)
 	return render(request, 'catalog/for_test.html', {'frg': get_cookies, 'fotos': fotos})
+
+
+

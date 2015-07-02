@@ -1,0 +1,12 @@
+
+    {% if user.is_authenticated %}
+      {% block user_ind %}
+
+
+<div class="list-group"><p>кабінет користувача {{ user.username }}</p></div>
+
+
+      {% endblock %}
+
+
+       {% endif %}

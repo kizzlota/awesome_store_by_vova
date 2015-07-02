@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from models import Shoes, Category, ShoesPhotos, User, RegistrationCode
+from busket.models import OrderModel
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render_to_response, HttpResponseRedirect
 import hashlib
@@ -21,6 +22,18 @@ def true_busket(request):
 	                request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	return BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 
+def user_cabinet(request):
+	username = request.user.username
+	user = OrderModel.objects.get(user_name=username)
+	print user
+	# print username
+	# if request.user.is_authenticated():
+	# 	print True
+	# 	if request.user.is_active:
+	# 		print True
+	#
+	#
+	return render(request, 'catalog/for_test.html', {'user_ind': user})
 
 def index(request):
 	category = request.GET.get('c', u'mans')
@@ -161,3 +174,5 @@ def user_logout(request):
 
 def base_page(request):
 	return render(request, 'base.html', context_instance=RequestContext(request))
+
+
