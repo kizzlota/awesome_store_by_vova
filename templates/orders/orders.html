@@ -2,7 +2,8 @@
 
 
 {% block content %}
- <hr>
+
+    <hr xmlns="http://www.w3.org/1999/html">
     <div class="text-info" style="border: 2px solid greenyellow">
      {% for i in find_in_basket %}
         <p><b> назва моделі: {{ i.name }}</b>Ціна:{{ i.price }}</p>
@@ -51,10 +52,22 @@
 <hr>
     <form action="/orders/new/" method="POST" class="form-horizontal" role="form">
     {% csrf_token %}
-    <label for="your_name">дані покупця : </label>
+    {% if user.is_authenticated %}
+         <label for="your_name">Hi, you are already logged as {{ user_credentials.username }} </label>
+    {% else %}
+         <label for="your_name">дані покупця : </label>
+    {% endif %}
     <ul class="list-group">
+    {% if user.is_authenticated %}
+   <div style="display: none">
+       username: <input id="id_user_name" maxlength="100" name="user_name" type="text" value="{{ user_credentials.username }}"> <br>
+       Email:  <input id="id_user_mail" maxlength="100" name="user_mail" type="email" value="{{ user_credentials.user_mail }}">
+   </div >
+       Phone: <input id="id_user_phone" maxlength="100" name="user_phone" type="text" value="{{ user_credentials.phone }}">
+       Address: <textarea cols="40" id="id_user_address" maxlength="350" name="user_address" rows="10">{{ user_credentials.address }}</textarea>
 
-        {{ user_info.non_field_errors }}
+    {%  else %}
+          {{ user_info.non_field_errors }}
        <li class="list-group-item-info"> {{ user_info.user_name.label_tag }}{{ user_info.user_name }}</li>
 
        <li class="list-group-item-info"> {{ user_info.user_mail.label }}{{ user_info.user_mail }}</li>
@@ -64,6 +77,7 @@
         {{ user_info.user_phone.errors }}
        <li class="list-group-item-info" >{{ user_info.user_address.label }}{{ user_info.user_address }}</li>
         <br>{{ user_info.user_address.errors }}
+    {% endif %}
  <script>
     function updateInput(){
 
@@ -79,7 +93,7 @@
 
 </script>
 
- <input id="id_shoes_quantity" maxlength="550" name="shoes_quantity"  type="text"/>
+ <input id="id_shoes_quantity" maxlength="550" name="shoes_quantity"  type="text" hidden/>
 <script>
 
             var elements = document.getElementsByClassName("ShoeQuan");

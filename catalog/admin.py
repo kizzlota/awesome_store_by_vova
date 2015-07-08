@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from catalog.models import User
+# from profile.models import UserDict
 
 
 class AuthUserAdmin(UserAdmin):
@@ -24,4 +24,4 @@ class AuthUserAdmin(UserAdmin):
     ordering = ('username',)
     filter_horizontal = ('groups', 'user_permissions',)
 
-admin.site.register(User, AuthUserAdmin)
+#admin.site.register(User, AuthUserAdmin)

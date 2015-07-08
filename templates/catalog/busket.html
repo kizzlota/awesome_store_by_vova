@@ -1,3 +1,5 @@
+   {% if basket %}
+
     {% for bas in basket %}
       <img src="/media/{{ bas.shoes_id.main_image }}" width="64px" class="img-rounded" />{{ bas.id }} {{ bas.shoes_id.name }} <a href="/busket_del/?id={{ bas.id }}" >X</a> <br>
      {% endfor %}
@@ -13,3 +15,4 @@
      {% endfor %}
 
     <a href="/orders/new/" target="_blank" class="btn btn-primary btn-sm btn-success" role="button">Submit</a>
+{%  endif %}

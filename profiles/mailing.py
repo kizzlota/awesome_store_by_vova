@@ -41,4 +41,4 @@ def send_email(user, prefix):
     msg = EmailMultiAlternatives(subject, text_content, from_email, [to],
                                  bcc=[bcc_email])
     msg.attach_alternative(html_content, 'text/html')
-    # msg.send()
+    msg.send()

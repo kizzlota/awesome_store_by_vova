@@ -44,6 +44,7 @@ INSTALLED_APPS = (
     'busket',
     'mptt',
     'testing_issues',
+    'profiles',
 
 
 )
@@ -61,7 +62,7 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'vovashop.urls'
 
-AUTH_USER_MODEL = 'catalog.User'
+AUTH_USER_MODEL = 'profiles.User'
 
 LOGIN_URL = '/sign_in/'
 
@@ -135,7 +136,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # email
 
 
-DEFAULT_EMAIL_FROM = "Awesome store <kizzlota.htc@gmail.com>"
+DEFAULT_EMAIL_FROM = "Awesome store <admin@remindsbirthdays.com>"
 DEFAULT_EMAIL_BCC = ''
 #
 EMAIL_HOST = 'smtp.gmail.com'

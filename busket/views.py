@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from django.shortcuts import render
 from models import OrderModel, Shoes
-from catalog.models import User
 from django.shortcuts import render_to_response
 import hashlib
 from busket.models import BasketModel
+from profiles.models import User
 from django.shortcuts import redirect
 from forms import OrderForm
 from django.core.context_processors import csrf
@@ -16,7 +16,7 @@ from django.core import signing
 def new_order(request):
 	order_cookie = signing.loads(request.COOKIES['id_list_basket'])
 	find_in_basket = Shoes.objects.filter(id__in=order_cookie)
-
+	user_credentials = {}
 	orders = OrderModel.objects.all()
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
 		'HTTP_USER_AGENT', 'chrome') + request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
@@ -24,7 +24,6 @@ def new_order(request):
 	i_all = 0
 	for ord in basket:
 		i_all += ord.shoes_id.price
-
 	if request.method == 'POST':                    # якщо метод з форми є POST тоді наступне
 		name_form = OrderForm(request.POST)         # свторюємо PostForm з даними з форми
 		if name_form.is_valid():                    # валідація
@@ -33,10 +32,19 @@ def new_order(request):
 			name_form.save_m2m()
 			basket.delete()
 			return HttpResponseRedirect('/')
+	elif request.user.is_authenticated() and request.user.is_active:
+				user_credentials['username'] = request.user.username
+				user_credentials['user_mail'] = request.user.email
+				user_order = User.objects.get(username=request.user.username)
+				user_credentials['phone'] = user_order.user_details.phone
+				user_credentials['address'] = user_order.user_details.address
+
+				print user_credentials
+				name_form = OrderForm()
 	else:
 		name_form = OrderForm()
 
-	return render(request, 'orders/orders.html', {'orders_outlines': orders, 'full_price': i_all, 'user_info': name_form, 'basket_info': basket, 'find_in_basket': find_in_basket})
+	return render(request, 'orders/orders.html', {'orders_outlines': orders, 'full_price': i_all, 'user_info': name_form, 'basket_info': basket, 'find_in_basket': find_in_basket, 'user_credentials': user_credentials})
 
 
 def finded_orders(request):

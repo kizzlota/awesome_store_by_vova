@@ -1,18 +1,14 @@
 # -*- coding: utf-8 -*-
-from django.shortcuts import render
-from models import Shoes, Category, ShoesPhotos, User, RegistrationCode
-from busket.models import OrderModel
-from django.contrib.auth import authenticate, login, logout
-from django.shortcuts import render_to_response, HttpResponseRedirect
 import hashlib
-from busket.models import BasketModel
+
+from django.shortcuts import render
+from django.shortcuts import render_to_response
 from django.shortcuts import redirect
-import datetime
 from django.core import signing
-from forms import RegisterForm, RegisterFormSecond
-from mailing import send_email
-from django.template import RequestContext
-from django.contrib.auth.decorators import login_required
+
+from models import Shoes, Category
+from busket.models import BasketModel
+
 
 # Create your views here.
 
@@ -22,21 +18,9 @@ def true_busket(request):
 	                request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	return BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 
-def user_cabinet(request):
-	username = request.user.username
-	user = OrderModel.objects.get(user_name=username)
-	print user
-	# print username
-	# if request.user.is_authenticated():
-	# 	print True
-	# 	if request.user.is_active:
-	# 		print True
-	#
-	#
-	return render(request, 'catalog/for_test.html', {'user_ind': user})
 
 def index(request):
-	category = request.GET.get('c', u'mans')
+	category = request.GET.get('c', u'one')
 	list_category = Category.objects.all()
 	shoes = Shoes.objects.filter(category_name__name=category).order_by('-id')
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get('HTTP_USER_AGENT', 'chrome') + \
@@ -103,76 +87,3 @@ def shoe(request, shoe_id):
 	images = Shoes.objects.filter(id=shoe_id)
 
 	return render(request, 'catalog/shoe_individual.html', {'images_few': images, 'basket': true_busket(request)})
-
-def registration(request):
-	if request.method == 'POST':
-		id_user = request.POST.get('username')
-		# print id_user
-		# info_form = RegistrationCode.objects.get(username__username=id_user)
-		# print info_form
-		reg_form = RegisterForm(request.POST)
-		if reg_form.is_valid():
-			data = reg_form.cleaned_data
-			user = User.objects.create_user(username=data['username'], email=data['email'])
-			user.set_password(data['password'])
-			# reg_form.save_m2m()
-			user.save()
-			loginuser = authenticate(username=data['username'], password=data['password'])
-			login(request, loginuser)
-			send_email(user, prefix='signup_email')
-
-			return HttpResponseRedirect('/reg/second/')
-	else:
-		reg_form = RegisterForm()
-	return render(request, 'catalog/registration.html', {'reg_form': reg_form})
-
-
-def registration_new_user(request):
-
-	return render(request, 'catalog/registration1.html', )
-
-
-def registration_second(request):
-	if request.user.is_authenticated():
-		if request.user.is_active:
-			if request.method == 'POST':
-				reg_form_sec = RegisterFormSecond(data=request.POST, instance=request.user)
-				if reg_form_sec.is_valid():
-					user = reg_form_sec.save(commit=False)
-					user.save()
-
-					return HttpResponseRedirect('/new_user')
-			else:
-				reg_form = RegisterFormSecond()
-
-			return render(request, 'catalog/sign_in.html', {'form_in': reg_form})
-
-	else:
-
-		return render(request, 'catalog/sign_in.html', {'sign_form': sign_form})
-
-
-def sign_in_user(request):
-	username = request.POST.get('your_username')
-	password = request.POST.get('your_password')
-	user = authenticate(username=username, password=password)
-	if user is not None:
-		login(request, user)
-		return HttpResponseRedirect('/')
-	else:
-		logout(request)
-
-	return render(request, 'catalog/sign_in.html', {})
-
-@login_required
-def user_logout(request):
-    # Since we know the user is logged in, we can now just log them out.
-    logout(request)
-
-    # Take the user back to the homepage.
-    return HttpResponseRedirect('/')
-
-def base_page(request):
-	return render(request, 'base.html', context_instance=RequestContext(request))
-
-

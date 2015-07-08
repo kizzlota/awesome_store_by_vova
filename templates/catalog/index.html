@@ -5,25 +5,39 @@
 
 
 {% block leftList %}
-{#{% for index in category %}#}
-{##}
-{#    <a href="/?c={{ index.name }}" class="list-group-item">       {{ index.name }}</a>#}
-{##}
-{# {% endfor %}#}
 
-    {% load mptt_tags %}
-<ul>
-    {% recursetree category %}
-        <li>
-           <a href="/?c={{ node.name }}">{{ node.name }}</a>
-            {% if not node.is_leaf_node %}
-                <ul class="children">
-                    {{ children }}
-                </ul>
-            {% endif %}
-        </li>
+{% load mptt_tags %}
+{#<ul>#}
+{#    {% recursetree category %}#}
+{#        <li>#}
+{#           <a href="/?c={{ node.name }}">{{ node.name }}</a>#}
+{#            {% if not node.is_leaf_node %}#}
+{#                <ul class="children">#}
+{#                    {{ children }}#}
+{#                </ul>#}
+{#            {% endif %}#}
+{#        </li>#}
+{#    {% endrecursetree %}#}
+{#</ul>#}
+{##}
+{#    <br>#}
+    <div id="menu">
+	<ul>
+ {% recursetree category %}
+
+            <li><a href="{{ node.name }}">{{ node.name }}</a>
+                {% if not node.is_leaf_node %} <label for="fof" class="toggle-sub" onclick="">&#9658;</label>
+                 <ul id="fof-sub" class="sub-nav">
+                    <li><a href="#">{{ children }}</a></li>
+                 </ul>
+
+                {% endif %}
+
+            </li>
+
     {% endrecursetree %}
-</ul>
+	</ul>
+</div><!-- closing "#menu" -->
 {% endblock %}
 
 
@@ -32,11 +46,6 @@
  {% block busket %}
 {% include 'catalog/busket.html' %}
  {% endblock %}
-
-    {% block user_ind %}
-        {%  include 'catalog/user_cabinet.html' %}
-    {%  endblock %}
-
 
 
 {% block content %}
