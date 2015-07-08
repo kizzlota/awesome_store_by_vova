@@ -1,0 +1,63 @@
+
+{% extends 'base.html' %}
+
+{% block leftList %}
+
+{% load mptt_tags %}
+    <div id="menu">
+	<ul>
+    {% recursetree category %}
+            <li><a href="{{ node.name }}">{{ node.name }}</a>
+                {% if not node.is_leaf_node %} <label for="fof" class="toggle-sub" onclick="">&#9658;</label>
+                 <ul id="fof-sub" class="sub-nav">
+                    <li><a href="#">{{ children }}</a></li>
+                 </ul>
+                {% endif %}
+            </li>
+    {% endrecursetree %}
+	</ul>
+</div><!-- closing "#menu" -->
+{% endblock %}
+
+
+
+    {% block busket %}
+        {% include 'catalog/busket.html' %}
+    {% endblock %}
+
+
+{% block content %}
+{% for shoe in shoes_search %}
+
+    <div class="col-sm-5 col-md-3">
+    <div class="thumbnail">
+         <a href="/shoe_ind/{{ shoe.id }}"><img src="/media/{{ shoe.main_image }}" alt="..."></a>
+          <div class="caption">
+            <h3>{{ shoe.name }}</h3>
+            <p>{{ shoe.decription }}</p>
+                  <p><a href="#" class="btn btn-primary" role="button">{{ shoe.price }}</a>
+                {%  if shoe.quantity > 0 and not shoe.id in id_list %}
+                      <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
+                    {% elif shoe.id in id_list %}
+                        already in busket
+              {%  else %}
+                       <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">нема в наявності</a> </p>
+              {% endif %}
+          </div>
+     </div>
+     </div>
+
+{% endfor %}
+{% endblock %}
+{##}
+{#{%  block content %}#}
+{#    {%  if not shoes_search %}#}
+{#        <p>Nothing Find</p>#}
+{#    {% else %}#}
+{#    {% for finded in shoes_search %}#}
+{#        <p> <img src="/media/{{ finded.main_image }}" width="124px"></p>#}
+{#        <p>name:{{ finded.name }}</p>#}
+{#    {% endfor %}#}
+{#    {% endif %}#}
+{##}
+{#{%  endblock %}#}

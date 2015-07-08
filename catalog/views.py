@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 import hashlib
-
+from django.db.models import Q
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 from django.core import signing
-
 from models import Shoes, Category
 from busket.models import BasketModel
-
+import re
 
 # Create your views here.
 
@@ -26,7 +25,6 @@ def index(request):
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get('HTTP_USER_AGENT', 'chrome') + \
 	            request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
-
 	id_list = []
 	for ids in basket:
 		id_list.append(ids.shoes_id.id)
@@ -87,3 +85,13 @@ def shoe(request, shoe_id):
 	images = Shoes.objects.filter(id=shoe_id)
 
 	return render(request, 'catalog/shoe_individual.html', {'images_few': images, 'basket': true_busket(request)})
+
+
+def simple_search(request):
+	shoes_search = {}
+	list_category = Category.objects.all()
+	if request.method == 'GET':
+		data = request.GET.get('search')
+		shoes_search = Shoes.objects.filter(Q(name__startswith=data) | Q(price__startswith=data) | Q(category_name__name__startswith=data)).distinct()
+	return render(request, 'catalog/search_result.html', {'shoes_search': shoes_search, 'category': list_category,
+	                                                      'basket': true_busket(request)})
