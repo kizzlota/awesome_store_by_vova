@@ -5,39 +5,8 @@
 
 
 {% block leftList %}
+ {%  include 'catalog/menu.html' %}
 
-{% load mptt_tags %}
-{#<ul>#}
-{#    {% recursetree category %}#}
-{#        <li>#}
-{#           <a href="/?c={{ node.name }}">{{ node.name }}</a>#}
-{#            {% if not node.is_leaf_node %}#}
-{#                <ul class="children">#}
-{#                    {{ children }}#}
-{#                </ul>#}
-{#            {% endif %}#}
-{#        </li>#}
-{#    {% endrecursetree %}#}
-{#</ul>#}
-{##}
-{#    <br>#}
-    <div id="menu">
-	<ul>
- {% recursetree category %}
-
-            <li><a href="{{ node.name }}">{{ node.name }}</a>
-                {% if not node.is_leaf_node %} <label for="fof" class="toggle-sub" onclick="">&#9658;</label>
-                 <ul id="fof-sub" class="sub-nav">
-                    <li><a href="#">{{ children }}</a></li>
-                 </ul>
-
-                {% endif %}
-
-            </li>
-
-    {% endrecursetree %}
-	</ul>
-</div><!-- closing "#menu" -->
 {% endblock %}
 
 

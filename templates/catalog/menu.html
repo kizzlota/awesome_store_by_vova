@@ -1,0 +1,19 @@
+
+{% load mptt_tags %}
+    <div id="menu">
+	<ul>
+    {% recursetree category %}
+
+            <li><a href="?c={{ node.name }}">{{ node.name }}</a>
+                {% if not node.is_leaf_node %} <label for="fof" class="toggle-sub" onclick="">&#9658;</label>
+                 <ul id="fof-sub" class="sub-nav">
+                    <li><a href="?c=">{{ children }}</a></li>
+                 </ul>
+
+                {% endif %}
+
+            </li>
+
+     {% endrecursetree %}
+	    </ul>
+    </div><!-- closing "#menu" -->
