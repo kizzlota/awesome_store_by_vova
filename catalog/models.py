@@ -4,12 +4,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from mptt.admin import MPTTModelAdmin
 import uuid
 import os
-# from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
-from django.utils import timezone
-from django.utils.translation import ugettext_lazy as _
 
-
-# Create your models here.
 
 def get_file_path(instance, filename):
 	ext = filename.split('.')[-1]
@@ -18,7 +13,7 @@ def get_file_path(instance, filename):
 
 
 class Category(MPTTModel):
-	name = models.CharField(max_length=200, unique=True)
+	name = models.CharField(max_length=200)
 	parent = TreeForeignKey('self', null=True, blank=True, related_name='children')
 
 	class MPTTMeta:
@@ -27,15 +22,15 @@ class Category(MPTTModel):
 	def __unicode__(self):
 		return self.name
 
-
+@admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
 	list_display = ["name"]
 	search_fields = ["name"]
 
 
+
 class ShoesPhotos(models.Model):
 	images = models.ImageField(blank=True, null=True, upload_to=get_file_path, default="/static/img/shoesimage.jpg")
-	# des = models.IntegerField(null=True)
 
 	def __unicode__(self):
 		return self.images.name
@@ -46,60 +41,53 @@ class ShoesPhotos(models.Model):
 	image_tag.short_description = 'Image'
 	image_tag.allow_tags = True
 
+class ShoeSizeParams(models.Model):
+	zise = models.CharField(max_length=50)
+	height_shoe = models.CharField(max_length=50, null=True, blank=True)
+	height_heel = models.CharField(max_length=50, null=True, blank=True)
+	len_of_stelka = models.CharField(max_length=50, null=True, blank=True)
+	len_of_feet = models.CharField(max_length=50, null=True, blank=True)
+	quantity = models.IntegerField()
 
-class ShoesPhotosAdmin(admin.ModelAdmin):
-	list_display = ['images', 'image_tag']
-	search_fields = ['images']
 
+class ShoeParameters(models.Model):
+	model_of_shoe = models.CharField(max_length=50, null=True, blank=True)
+	color = models.CharField(max_length=50)
+	date_manufac = models.DateField()
+	price = models.IntegerField()
+	new_price = models.IntegerField(blank=True, null=True)
+	material = models.CharField(max_length=50, null=True, blank=True)
+	vkladka = models.CharField(max_length=50, null=True, blank=True)
+	main_image = models.ImageField(blank=True, null=True, upload_to=get_file_path, default="/static/img/shoesimage.jpg")
+	relation_to_shoes_photos = models.ManyToManyField(ShoesPhotos)
+	rel_to_size = models.ManyToManyField(ShoeSizeParams)
+
+	def relation_to_photo(self):
+		return self.relation_to_shoes_photos.all()
+	relation_to_photo.short_description = 'relation'
+
+
+	def relation_size(self):
+		return self.rel_to_size.all()
+	rel_to_size.short_description = 'relation_size'
+
+	def __unicode__(self):
+		return self.model_of_shoe + self.color
 
 
 class Shoes(models.Model):
+	manufacturer = models.CharField(max_length=100)
 	name = models.CharField(max_length=200)
-	image = models.ManyToManyField(ShoesPhotos, blank=True)
-	main_image = models.ImageField(blank=True, null=True, upload_to=get_file_path,
-	                               default="/static/img/shoesimage.jpg")
-	price = models.IntegerField()
 	description = models.CharField(max_length=150, blank=True, null=True)
 	category_name = models.ManyToManyField(Category)
-	date = models.DateTimeField(null=True, auto_now_add=True)
-	quantity = models.IntegerField(default=0)
+	# date = models.DateTimeField(null=True, auto_now_add=True)
+	relation_to_shoes_params = models.ManyToManyField(ShoeParameters)
 
 	def __unicode__(self):
 		return self.name
-
-	def image_tag(self):
-		return u'<img src= "%s" width="64px" / >' % self.main_image.url
-
-	image_tag.short_description = 'Image'
-	image_tag.allow_tags = True
 
 	def cat_name_for_shoe(self):
 		return self.category_name.all()
 
 	cat_name_for_shoe.short_description = 'category'
 	cat_name_for_shoe.allow_tag = True
-
-
-class PropertyImageInline(admin.TabularInline):
-	model = Shoes.image.through
-	extra = 3
-	readonly_fields = ['row_name']
-
-	def row_name(self, instance):
-		return u'<img src="/media/%s" width="64px" / >' % instance.shoesphotos.images
-
-	row_name.short_description = 'row_name2'
-	row_name.allow_tags = True
-
-
-class ShoesAdmin(admin.ModelAdmin):
-	list_display = ["id", "name", "price", "date", "image_tag", "cat_name_for_shoe", "quantity"]
-	search_fields = ["name", "price", "quantity"]
-	# filter_horizontal = ('image',)
-	exclude = ('image',)
-	inlines = [PropertyImageInline, ]
-
-
-admin.site.register(Category, CategoryAdmin)
-admin.site.register(Shoes, ShoesAdmin)
-admin.site.register(ShoesPhotos, ShoesPhotosAdmin)

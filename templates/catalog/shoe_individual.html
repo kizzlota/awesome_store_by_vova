@@ -18,28 +18,67 @@
 
 {%  block content %}
 
-    <div>
-        {%  for pic in images_few %}
-            <img src="/media/{{ pic.main_image }}" width="480px" /> <br>
+    <div class="row">
+          <div class="col-md-6"  >
+            {%  for shoe in indiv_shoe %}
+            {%  for param in shoe.relation_to_shoes_params.all %}
 
-            {% for pic_few in pic.image.all %}
-                <img src="/media/{{ pic_few.images }}" width="260px" />
+            {%  if param.id == params_id %}
+            <img src="/media/{{ param.main_image }}" width="480px" style="border: 1px solid lightgrey; " />
+                <p>Available colors:</p>
+                    {%  for color in shoe.relation_to_shoes_params.all %}
+                     <a href="/shoe_ind/{{ shoe.id }}/{{ color.id }}"><img src="/media/{{ color.main_image }}" width="54px" style="border: 5px dashed {{ color.color }};" alt="..."></a>
+
+                    {%  endfor %}
+            <br>
+            <br>
+            <div class="col-sm-8">
+
+                {% for pic_few in param.relation_to_shoes_photos.all %}
+                <div class="col-md-5 col-md-offset-1" style="border: 1px solid lightgrey; ">
+                <img src="/media/{{ pic_few.images }}" width="150px" /></div>
             {% endfor %}
-            <br>
-            <hr>
-            <hr>
-            <br>
-            <div class="product_info">
-            <ul class="list-group">
-                <li class="list-group-item list-group-item-success">Name: {{ pic.name }}</li>
-                <li class="list-group-item list-group-item-info">price: {{ pic.price }}</li>
-                <li class="list-group-item list-group-item-info">description: {{ pic.description }}</li>
-                <li class="list-group-item list-group-item-info">quantity: {{ pic.quantity }}</li>
 
-            </ul>
             </div>
+                </div>
+
+                <div class="col-md-4">
+                <img src="/static/img/tov_garanat.jpg" width="300px" />
+               <p> Mabyfacturer: {{ shoe.manufacturer }}</p>
+                <p>model: {{ param.model_of_shoe }}</p>
+                {% if param.new_price  %}
+                    <p>price: <strike>{{ param.price }}</strike> <b>{{ param.new_price }} uah</b></p>
+                {% else %}
+                    <p>price: {{ param.price }} uah</p>
+                {% endif %}
+                <hr>
+                     <p>material: {{ param.material }}</p>
+                    <p>vkladka: {{ param.vkladka }}</p>
+                    <hr>
+                <p>make order:</p>
+                 <form action="/busket/" method="GET" class="form-horizontal col-md-6" role="form">
+                   <div class="form-group ">
+                      <label for="sel1">choose a size:</label>
+                      <select class="form-control" name="shoe">
+                        {% for size in param.rel_to_size.all %}
+                          <option value="{{ size.id }}" >{{ size.zise }}</option>
+                       {% endfor %}
+                      </select>
+                    </div>
+
+                     <div class="form-group">
+                         <button type="submit" class="btn btn-default">Buy</button>
+
+                     </div>
+                     </form>
+
+                </div>
+   </div>
+
+                {% endif %}
         {% endfor %}
-    </div>
+        {% endfor %}
+
     <div>
         {%  for i in pictures_shoes %}
         <img src="/media/{{ i }}" width="240px" />

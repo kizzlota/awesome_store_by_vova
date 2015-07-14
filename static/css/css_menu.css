@@ -1,0 +1,77 @@
+/* http://fofwebdesign.co.uk/freebies-for-websites/css/multi-rwd-side-fly-menu.htm */
+/* Released: 4th June 2014 - Beverley Hooton @ Focus on Function Web Design */
+/* Updated: 15th July 2014 - css to correct 'position:fixed' bug in Safari */
+/* Updated: 19th March 2015 - css sub-menu activation simplified [id$="-sub"] - thanks SeanW */
+/* Updated: 26th June 2015 - &#9668; arrows changed to &#9658; and rotated, for Android */
+html, body { margin:0; padding:0; height:100%; position:relative;  font:16px/1.75 Verdana, Arial, Helvetica, sans-serif }
+body { overflow-x:hidden; -webkit-animation:androidbugfix infinite 1s } /* http://timpietrusky.com/advanced-checkbox-hack */
+@-webkit-keyframes androidbugfix { from {padding:0} to {padding:0} } /* http://timpietrusky.com/advanced-checkbox-hack */
+#header { position:relative; top:0; left:0; right:0; height:4.0625em; background:#222 }
+#header label { padding:0 0.125em; font:2.875em/1.4375em Arial }
+#menu label { padding:0 0.25em; font:3.125em/1.375em Arial }
+#menu .sub-nav .toggle { padding:0 0.3125em; font:2em/2em Arial; top:0; -webkit-transform:scale(-1,1); -ms-transform:scale(-1,1); transform:scale(-1,1) }
+#header label:hover, #menu label:hover { color:#ccc }
+#main-nav-check, #menu .sub-nav-check { position:absolute; top:-9999px; left:-9999px }
+.toggle { position:absolute; right:0.15em; cursor:pointer; color:#fff }
+.container { background:#fff; min-height:100%; padding:0; margin:0 }
+#menu, #menu .sub-nav { position:relative; top:0; bottom:0; width:13.75em; background:#222; z-index:9999; left:-13.75em }
+.container, #menu, #menu .sub-nav {
+	-webkit-transform:translate(0,0); -ms-transform:translate(0,0); transform:translate(0,0);
+	-webkit-transition:-webkit-transform .25s ease; transition:transform .25s ease
+	}
+#menu ul { background:#222; line-height:2.75em; text-decoration:none; padding:0; list-style:none; margin-top:4.0625em; border-top:1px solid #444 }
+#menu li { border-bottom:1px solid #444 }
+#menu li a { display:block; font-size:0.875em; padding-left:1.5em; color:#fff; text-decoration:none }
+#menu li a:hover, #menu .toggle-sub:hover { background:#333 }
+#menu .sub-nav { margin-top:-1px }
+#menu .sub-heading { margin-top:4.0625em; padding-left:1.3125em; color:#999 }
+#menu .sub-heading:before { content:""; display:block; height:1px; width:13.75em; margin-left:-1.3125em; background:#444 }
+#menu .toggle-sub { font:bold 1em/2.75em Arial; color:#fff; background:#222; float:right; margin-top:-2.75em; width:2.25em; border-left:1px solid #444; cursor:pointer; text-align:center }
+.container, #menu, #menu .sub-nav { -webkit-transform:translate3d(0,0,0) } /* http://davidwalsh.name/translate3d */
+
+/* #### - corrects 'unfixing' bug in Safari - uncomment if you have position:fixed elements inside .container - #### */
+/* @media screen and (-webkit-min-device-pixel-ratio:0) { .container { -webkit-transform:none !important } } */
+
+/* #### - define ids of animated container, menu and sub-menus here - #### */
+#main-nav-check:checked ~ .container,
+#main-nav-check:checked ~ #menu,
+#menu .sub-nav-check:checked ~ [id$="-sub"] /* matches all elements with id ending "-sub" */ {
+	-webkit-transform:translate(13.75em,0); -ms-transform:translate(13.75em,0); transform:translate(13.75em,0)
+	}
+
+
+@media ( min-width:60em ) { /* #### - switch to fancy desktop fly-out menu at 960px (960/16=60 - 16px being default browser font-size) - #### */
+
+	.container, #menu { -webkit-transform:translate(0,0) !important; -ms-transform:translate(0,0) !important; transform:translate(0,0) !important }
+	.wrapper { max-width:78.75em; margin:auto; -webkit-transform:translate(0,0); -ms-transform:translate(0,0); transform:translate(0,0) }
+	.container { background:#222; padding-left:13.75em }
+	#menu { left:0 }
+	#menu label, #header label, #menu .sub-heading { display:none }
+	#menu .sub-nav { position:absolute; z-index:-9999; top:auto; margin-top:-2.75em; left:0; bottom:auto; visibility:hidden; opacity:0 }
+	#menu ul li a { background:#222 } /* counteracts opacity so children don't ghost through parents */
+	#menu ul label { display:inline-block }
+	#menu .toggle-sub, #menu .toggle-sub:hover { background:transparent }
+	#menu ul { position:relative; margin-left:0 }
+	#menu ul li:hover > label { color:#ccc }
+	#menu ul li:hover > a { background:#333; -webkit-transition:background-color .25s ease; transition:background-color .25s ease } /* fade effect for modern browsers */
+	#menu ul li:hover > ul { position:absolute; left:0; background:#222; border-top:0; visibility:visible; opacity:1;
+		-webkit-transform:translate(13.75em,0); -ms-transform:translate(13.75em,0); transform:translate(13.75em,0);
+		-webkit-transition:all .25s ease; transition:all .25s ease
+		}
+	#menu ul li:hover > ul:before { content:""; display:block; position:absolute; top:-1px; left:0; height:1px; width:13.75em; background:#444 }
+	#menu ul ul ul { margin-left:-1px }
+	#menu ul ul li { border-left:1px solid #444; border-right:1px solid #444 }
+
+}
+
+
+.page-content { background:#fff; padding:0 1em 1em }
+.page-content:after { display:block; content:''; height:1px } /* fixes bottom padding issue in IE10 */
+.breadcrumbs { font-size:.75em; border-bottom:7px solid #eee; margin:0 -1.25em 1.5em; padding:1em 1.25em }
+.breadcrumbs span { display:none }
+@media(min-width:30em) { .breadcrumbs { line-height:3.75; padding:0 1.25em } }
+@media(min-width:60em) { .breadcrumbs { margin:0 0 1.5em; padding:0 } .breadcrumbs span { display:inline-block } .page-content { padding:0 2em 1em } }
+a, a:active, a:visited { color:#c30 }
+a:visited { color:#c90 }
+a:hover, a:focus { color:#666; text-decoration:none }
+code { display:block; background:#ebebeb; font-size:0.875em; padding:1em 2em; overflow-x:scroll; white-space:nowrap }

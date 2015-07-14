@@ -19,15 +19,17 @@
 
 {% block content %}
 {% for shoe in shoes %}
+    {%  for params in shoe.relation_to_shoes_params.all %}
+
 
     <div class="col-sm-5 col-md-3">
 <div class="thumbnail">
-     <a href="/shoe_ind/{{ shoe.id }}"><img src="media/{{ shoe.main_image }}" alt="..."></a>
+     <a href="/shoe_ind/{{ shoe.id }}/{{ params.id }}"><img src="media/{{ params.main_image }}" alt="..."></a>
       <div class="caption">
         <h3>{{ shoe.name }}</h3>
         <p>{{ shoe.decription }}</p>
-              <p><a href="#" class="btn btn-primary" role="button">{{ shoe.price }}</a>
-            {%  if shoe.quantity > 0 and not shoe.id in id_list %}
+              <p><a href="#" class="btn btn-primary" role="button">{{ params.price }}</a>
+            {%  if params.quantity > 0 and not shoe.id in id_list %}
                   <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
                 {% elif shoe.id in id_list %}
                     already in busket
@@ -38,6 +40,7 @@
  </div>
  </div>
 
+{%  endfor %}
 {% endfor %}
 {% endblock %}
 

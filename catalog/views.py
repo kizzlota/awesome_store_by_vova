@@ -13,8 +13,9 @@ import re
 
 
 def true_busket(request):
-	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get('HTTP_USER_AGENT', 'chrome') + \
-	                request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
+	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
+		'HTTP_USER_AGENT', 'chrome') + \
+	            request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	return BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 
 
@@ -22,7 +23,8 @@ def index(request):
 	category = request.GET.get('c', u'one')
 	list_category = Category.objects.all()
 	shoes = Shoes.objects.filter(category_name__name=category).order_by('-id')
-	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get('HTTP_USER_AGENT', 'chrome') + \
+	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
+		'HTTP_USER_AGENT', 'chrome') + \
 	            request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 	id_list = []
@@ -31,10 +33,19 @@ def index(request):
 	hoes = []
 	if 'id_list_basket' in request.COOKIES:
 		id_list_cook_true = signing.loads(request.COOKIES['id_list_basket'])
-		hoes = Shoes.objects.filter(id__in=id_list_cook_true)  # filter ne vyvodyt odnalovi zna4ennia, id__in = vylorystovuetis dlia filtruvannia bagatiox zna4en lista
-	asd = render(request, 'catalog/index.html', {'category': list_category, 'shoes': shoes, 'basket': basket, 'id_list': id_list, 'hoes': hoes})
+		hoes = Shoes.objects.filter(
+			id__in=id_list_cook_true)  # filter ne vyvodyt odnalovi zna4ennia, id__in = vylorystovuetis dlia filtruvannia bagatiox zna4en lista
+	asd = render(request, 'catalog/index.html',
+	             {'category': list_category, 'shoes': shoes, 'basket': basket, 'id_list': id_list, 'hoes': hoes})
 	asd.set_cookie('favarite_color', 'red', max_age=8000)  # setting index cookie , not reasonable
 	return asd
+
+
+def shoe(request, shoe_id, params_id):
+	indiv_shoe = Shoes.objects.filter(id=shoe_id)
+
+	return render(request, 'catalog/shoe_individual.html', {'indiv_shoe': indiv_shoe,
+	                                                        'basket': true_busket(request), 'params_id': int(params_id)})
 
 
 def out_news(request):
@@ -81,17 +92,13 @@ def busket_del(request):
 
 	return update_cookie
 
-def shoe(request, shoe_id):
-	images = Shoes.objects.filter(id=shoe_id)
-
-	return render(request, 'catalog/shoe_individual.html', {'images_few': images, 'basket': true_busket(request)})
-
 
 def simple_search(request):
 	shoes_search = {}
 	list_category = Category.objects.all()
 	if request.method == 'GET':
 		data = request.GET.get('search')
-		shoes_search = Shoes.objects.filter(Q(name__startswith=data) | Q(price__startswith=data) | Q(category_name__name__startswith=data)).distinct()
+		shoes_search = Shoes.objects.filter(
+			Q(name__startswith=data) | Q(price__startswith=data) | Q(category_name__name__startswith=data)).distinct()
 	return render(request, 'catalog/search_result.html', {'shoes_search': shoes_search, 'category': list_category,
 	                                                      'basket': true_busket(request)})

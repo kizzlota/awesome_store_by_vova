@@ -1,5 +1,4 @@
 from django.contrib import admin
-from catalog.admin import AuthUserAdmin
 from models import RegistrationCode
 from django.contrib.auth.admin import UserAdmin
 from models import User, UserAddress

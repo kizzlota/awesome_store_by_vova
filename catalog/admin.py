@@ -1,27 +1,26 @@
 from django.contrib import admin
+from models import Shoes, ShoesPhotos, ShoeParameters, ShoeSizeParams
 from django.contrib.auth.admin import UserAdmin
 # from profile.models import UserDict
 
+@admin.register(Shoes)
+class ShoesAdmin(admin.ModelAdmin):
+	list_display = ['id', 'name', 'manufacturer']
+	filter_horizontal = ('category_name',)
 
-class AuthUserAdmin(UserAdmin):
-    list_display = ('username', 'email', 'is_staff', 'is_superuser')
-    list_filter = ('is_superuser',)
+@admin.register(ShoeSizeParams)
+class ShoeSizeParamsAdmin(admin.ModelAdmin):
+	list_display = ['zise', 'quantity']
 
-    fieldsets = (
-        (None, {'fields': ('username', 'email', 'password', 'first_name', 'last_name',
-                           'social_img_url', 'profile_image', 'user_bio', 'last_login', 'date_joined')}),
-        ('Permissions', {'fields': ('is_active', 'is_superuser', 'is_staff')}),
-    )
+@admin.register(ShoeParameters)
+class ShoeParametersAdmin(admin.ModelAdmin):
+	list_display = ['id', 'color', 'model_of_shoe', 'date_manufac', 'relation_to_photo', 'main_image']
 
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('username', 'email', 'password1', 'password2', 'is_staff', 'is_superuser')}
-        ),
-    )
+@admin.register(ShoesPhotos)
+class ShoesPhotosAdmin(admin.ModelAdmin):
+	list_display = ['id', 'images']
 
-    search_fields = ('username', 'email')
-    ordering = ('username',)
-    filter_horizontal = ('groups', 'user_permissions',)
-
-#admin.site.register(User, AuthUserAdmin)
+#
+# admin.site.register(Shoes, ShoesAdmin)
+# admin.site.register(ShoeParameters, ShoeParametersAdmin)
+# admin.site.register(ShoesPhotos, ShoesPhotosAdmin)

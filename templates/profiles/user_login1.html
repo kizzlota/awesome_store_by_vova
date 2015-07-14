@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% verbatim %}
+    {% block leftList %}
+
+        {% load mptt_tags %}
+    <ul>
+        {% recursetree category %}
+            <li>
+               <a href="/?c={{ node.name }}">{{ node.name }}</a>
+                {% if not node.is_leaf_node %}
+                    <ul class="children">
+                        {{ children }}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endrecursetree %}
+    </ul>
+    {% endblock %}
+{% endverbatim %}
+
+
+ {% block busket %}
+{% include 'catalog/busket.html' %}
+ {% endblock %}
+
+{% block content %}
+
+        <div class="col-sm-5 col-md-3">
+SIGN_IN_PAGE
+
+    <form action="/sign_in/" method="POST" class="form-horizontal" role="form">
+    {% csrf_token %}
+    <label for="your_username">login : </label>
+        <ul class="list-group">
+            <input id="your_username" type="text", name="your_username" value="{{ username }}">
+            <input id="your_password" type="password", name="your_password" value="{{ password }}">
+
+        </ul>
+        <input type="submit" value="OK" class="btn btn-default">
+
+    </form>
+
+<br />
+   <form action="/reg/second/" method="POST" class="form-horizontal" role="form">
+    {% csrf_token %}
+  {{ form_in.as_p }}
+
+     <br />
+
+
+         <input type="submit" value="OK" class="btn btn-default">
+
+</form>
+      </div>
+
+
+
+{% endblock %}
+
+
+

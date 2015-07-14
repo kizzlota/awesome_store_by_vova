@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+    <p>{{ user_identity }}</p>
+
+    {%  if photo_form_set %}
+
+<form action="/profiles/manager/" method="POST" class="form-horizontal" role="form">
+    {% csrf_token %}
+    {{ shoe_main.as_p }}
+    <br>
+    {{ shoe_main_param.as_p }}
+    <br>
+    {{ shoe_param_set.as_p }}
+
+    <br>
+
+    {{ photo_form_set.as_p }}
+
+    <br>
+
+      <button type="submit" class="btn btn-default">Submit</button>
+
+  </div>
+</form>
+{%  endif %}
+{% endblock %}
+
+
+

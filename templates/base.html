@@ -47,7 +47,16 @@
               </form>
 
               <ul class="nav navbar-nav navbar-right">
+               {% if user.is_authenticated %}
+                    {% if user.is_superuser %}
+
                 <li><a href="/admin" target="_blank">Admin</a></li>
+                         {% elif user.is_staff %}
+                             <li><a href="/profiles/manager" target="_blank">managing</a></li>
+
+
+              {% endif %}
+              {% endif %}
                   <li><a href="/orders/new" target="_blank">Orders</a> </li>
                   <li><a href="/profiles/registration/">Registration</a></li>
 
