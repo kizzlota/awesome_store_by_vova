@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib import admin
-from catalog.models import Shoes
+from catalog.models import Shoes, ShoeParameters
 from django.db.models.signals import m2m_changed
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -15,7 +15,7 @@ class BasketModel(models.Model):
 	data_user_hash = models.CharField(max_length=200)
 	quantity = models.IntegerField(blank=True, null=True)
 	date = models.DateTimeField(auto_now_add=True)
-	shoes_id = models.ForeignKey(Shoes)
+	shoes_id = models.ForeignKey(ShoeParameters)
 
 	@property
 	def info_mesht(self):
@@ -33,7 +33,7 @@ class OrderModel(models.Model):
 	user_address = models.TextField(max_length=350)
 	user_mail = models.EmailField(max_length=100)
 	shoes_quantity = models.CharField(max_length=550, blank=True, null=True)
-	order_id = models.ManyToManyField(Shoes)
+	order_id = models.ManyToManyField(ShoeParameters)
 	#user_hash = models.CharField(blank=True, null=True, max_length=200)
 
 	def save(self, *args, **kwargs):
@@ -45,7 +45,7 @@ class OrderModel(models.Model):
 		x = self.shoes_quantity
 		x = json.loads(x)
 		for i, j in x.iteritems():
-			id_in_shoes = Shoes.objects.get(id=i)
+			id_in_shoes = ShoeParameters.objects.get(id=i)
 			id_in_shoes.quantity -= int(j)
 			id_in_shoes.save()
 			print i, j

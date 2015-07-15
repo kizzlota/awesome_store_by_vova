@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 from django.core import signing
-from models import Shoes, Category
+from models import Shoes, Category, ShoeParameters
 from busket.models import BasketModel
 import re
 
@@ -20,9 +20,15 @@ def true_busket(request):
 
 
 def index(request):
-	category = request.GET.get('c', u'one')
+	category = request.GET.get('c')
+
+	if not category:
+		shoes = Shoes.objects.all()
+	else:
+		category = request.GET.get('c', u'Жіночі')
+		shoes = Shoes.objects.filter(category_name__name=category).order_by('-id')
 	list_category = Category.objects.all()
-	shoes = Shoes.objects.filter(category_name__name=category).order_by('-id')
+
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
 		'HTTP_USER_AGENT', 'chrome') + \
 	            request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
@@ -36,7 +42,7 @@ def index(request):
 		hoes = Shoes.objects.filter(
 			id__in=id_list_cook_true)  # filter ne vyvodyt odnalovi zna4ennia, id__in = vylorystovuetis dlia filtruvannia bagatiox zna4en lista
 	asd = render(request, 'catalog/index.html',
-	             {'category': list_category, 'shoes': shoes, 'basket': basket, 'id_list': id_list, 'hoes': hoes})
+	             {'category': list_category, 'shoes': shoes, 'basket': basket, 'id_list': id_list, 'hoes': hoes })
 	asd.set_cookie('favarite_color', 'red', max_age=8000)  # setting index cookie , not reasonable
 	return asd
 
@@ -58,7 +64,7 @@ def busket(request):
 	id2 = request.META.get('HTTP_REFERER')
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
 		'HTTP_USER_AGENT', 'chrome') + request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
-	shoes = Shoes.objects.get(id=id1)
+	shoes = ShoeParameters.objects.get(id=id1)
 	date = BasketModel(data_user_hash=hashlib.sha256(user_date).hexdigest(), quantity=1, shoes_id=shoes)
 	date.save()
 	asd = redirect(id2)  # HttpResponse

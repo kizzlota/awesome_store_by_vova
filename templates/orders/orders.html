@@ -2,21 +2,26 @@
 
 
 {% block content %}
+{##}
+{#    <div class="text-info" style="border: 2px solid greenyellow">#}
+{#     {% for i in find_in_basket %}#}
+{#        {% for j in i.relation_to_shoes_params.all %}#}
+{##}
+{#        <p><b> назва моделі: {{ i.name }}</b>Ціна:{{ j.price }}</p>#}
+{#         <img src="/media/{{ j.main_image }}" width="240px">#}
+{#          <button class="button"><a href="/busket_del/?idc={{ i.id }}" >видалити з кошика</a></button>#}
+{##}
+{#         {% endfor %}#}
+{#         {% endfor %}#}
+{#  <br>#}
+{#  <br>#}
+{#    </div>#}
+{##}
 
-    <hr xmlns="http://www.w3.org/1999/html">
-    <div class="text-info" style="border: 2px solid greenyellow">
-     {% for i in find_in_basket %}
-        <p><b> назва моделі: {{ i.name }}</b>Ціна:{{ i.price }}</p>
-         <img src="/media/{{ i.main_image }}" width="240px">
-          <button class="button"><a href="/busket_del/?idc={{ i.id }}" >видалити з кошика</a></button>
+Bootom
 
-         {% endfor %}
-  <br>
-  <br>
-    </div>
 {% for ord in basket_info %}
-
-    <div class="media" xmlns="http://www.w3.org/1999/html">
+    <div class="media" >
   <div class="media-left media-middle">
 
     <a href="#">
@@ -32,6 +37,19 @@
     <h4 class="media-heading" style="font-size: medium">Ціна: {{ ord.shoes_id.price }}</h4>
 
   </div>
+
+        {% for ii in ord.shoes_id.size.all %}
+            {% if ii.quantity > 0 %}
+               <p> {{ ii.size }}</p>
+                {% else %}
+            {% endif %}
+
+            {%  for i in ord.shoes_id.rel_to_size.all %}
+                {% for ii in i.all %}
+                    <p>{{ ii.size }}</p>
+                    {% endfor %}
+                    {% endfor %}
+
     <div class="media-right">
         <label for="{{ ord.shoes_id.id }}">Кількість</label> <button class="button"><a href="/busket_del/?id={{ ord.id }}" >видалити з кошика</a></button> <br>
         <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ ord.shoes_id.id }}" min="1" type="number"
@@ -46,6 +64,7 @@
   }
 </script>
 
+{% endfor %}
 {% endfor %}
 <br>
     <p class="text-info" style="background-color: lightgrey">Загальна сума {{ full_price }}</p>
