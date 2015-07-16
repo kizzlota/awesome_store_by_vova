@@ -10,11 +10,11 @@ class ShoesAdmin(admin.ModelAdmin):
 
 @admin.register(ShoeSizeParams)
 class ShoeSizeParamsAdmin(admin.ModelAdmin):
-	list_display = ['zise', 'quantity']
+	list_display = ['id', 'size', 'quantity']
 
 @admin.register(ShoeParameters)
 class ShoeParametersAdmin(admin.ModelAdmin):
-	list_display = ['id', 'color', 'model_of_shoe', 'date_manufac', 'relation_to_photo', 'main_image']
+	list_display = ['id', 'color', 'model_of_shoe', 'date_manufac', 'relation_to_photo', 'main_image', 'relation_size']
 
 @admin.register(ShoesPhotos)
 class ShoesPhotosAdmin(admin.ModelAdmin):

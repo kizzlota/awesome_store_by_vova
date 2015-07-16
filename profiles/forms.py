@@ -30,7 +30,7 @@ class ShoeParametersForm(ModelForm):
 class ShoeSizeParamsForm(ModelForm):
 	class Meta:
 		model = ShoeSizeParams
-		fields = 'zise', 'height_shoe', 'height_heel', 'len_of_stelka', 'len_of_feet', 'quantity'
+		fields = 'size', 'height_shoe', 'height_heel', 'len_of_stelka', 'len_of_feet', 'quantity'
 
 class ShoesPhotosForm(ModelForm):
 	class Meta:

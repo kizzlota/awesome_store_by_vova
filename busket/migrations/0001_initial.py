@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('data_user_hash', models.CharField(max_length=200)),
                 ('quantity', models.IntegerField(null=True, blank=True)),
                 ('date', models.DateTimeField(auto_now_add=True)),
-                ('shoes_id', models.ForeignKey(to='catalog.Shoes')),
+                ('shoes_id', models.ForeignKey(to='catalog.ShoeParameters')),
             ],
         ),
         migrations.CreateModel(
@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('user_address', models.TextField(max_length=350)),
                 ('user_mail', models.EmailField(max_length=100)),
                 ('shoes_quantity', models.CharField(max_length=550, null=True, blank=True)),
-                ('order_id', models.ManyToManyField(to='catalog.Shoes')),
+                ('order_id', models.ManyToManyField(to='catalog.ShoeParameters')),
             ],
         ),
     ]

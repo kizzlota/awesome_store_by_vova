@@ -33,7 +33,7 @@ class ShoesPhotos(models.Model):
 	images = models.ImageField(blank=True, null=True, upload_to=get_file_path, default="/static/img/shoesimage.jpg")
 
 	def __unicode__(self):
-		return self.images.name
+		return str(self.id)
 
 	def image_tag(self):
 		return u'<img src= "%s" width="120px" / >' % self.images.url
@@ -42,12 +42,16 @@ class ShoesPhotos(models.Model):
 	image_tag.allow_tags = True
 
 class ShoeSizeParams(models.Model):
-	zise = models.CharField(max_length=50)
+	size = models.CharField(max_length=50)
 	height_shoe = models.CharField(max_length=50, null=True, blank=True)
 	height_heel = models.CharField(max_length=50, null=True, blank=True)
 	len_of_stelka = models.CharField(max_length=50, null=True, blank=True)
 	len_of_feet = models.CharField(max_length=50, null=True, blank=True)
+	shoe_bool = models.BooleanField(default=False)
 	quantity = models.IntegerField()
+
+	def __unicode__(self):
+		return self.size
 
 
 class ShoeParameters(models.Model):

@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib import admin
-from catalog.models import Shoes, ShoeParameters
+from catalog.models import Shoes, ShoeParameters, ShoeSizeParams
 from django.db.models.signals import m2m_changed
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
@@ -15,7 +15,7 @@ class BasketModel(models.Model):
 	data_user_hash = models.CharField(max_length=200)
 	quantity = models.IntegerField(blank=True, null=True)
 	date = models.DateTimeField(auto_now_add=True)
-	shoes_id = models.ForeignKey(ShoeParameters)
+	shoes_id = models.ForeignKey(ShoeSizeParams)
 
 	@property
 	def info_mesht(self):

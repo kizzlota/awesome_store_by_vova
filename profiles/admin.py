@@ -30,7 +30,7 @@ class AuthUserAdmin(UserAdmin):
 		filter_horizontal = ('groups', 'user_permissions',)
 
 class UserAddressAdmin(admin.ModelAdmin):
-	list_display = ('phone', 'address', 'city', 'street', 'country')
+	list_display = ('id', 'phone', 'address', 'city', 'street', 'country')
 
 
 admin.site.register(User, AuthUserAdmin)

@@ -5,7 +5,7 @@ from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.shortcuts import redirect
 from django.core import signing
-from models import Shoes, Category, ShoeParameters
+from models import Shoes, Category, ShoeParameters, ShoeSizeParams
 from busket.models import BasketModel
 import re
 
@@ -21,7 +21,6 @@ def true_busket(request):
 
 def index(request):
 	category = request.GET.get('c')
-
 	if not category:
 		shoes = Shoes.objects.all()
 	else:
@@ -32,8 +31,10 @@ def index(request):
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
 		'HTTP_USER_AGENT', 'chrome') + \
 	            request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
+
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 	id_list = []
+
 	for ids in basket:
 		id_list.append(ids.shoes_id.id)
 	hoes = []
@@ -60,12 +61,15 @@ def out_news(request):
 
 
 def busket(request):
+	id0 = request.GET.get('id')
+	shoe_size = ShoeSizeParams.objects.get(id=id0)
+
 	id1 = request.GET.get('id', '1')  # if peyxodyt NOne to po default vstanovyt 1
 	id2 = request.META.get('HTTP_REFERER')
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
 		'HTTP_USER_AGENT', 'chrome') + request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
-	shoes = ShoeParameters.objects.get(id=id1)
-	date = BasketModel(data_user_hash=hashlib.sha256(user_date).hexdigest(), quantity=1, shoes_id=shoes)
+	# shoes = ShoeParameters.objects.get(id=id1)
+	date = BasketModel(data_user_hash=hashlib.sha256(user_date).hexdigest(), quantity=1, shoes_id=shoe_size)
 	date.save()
 	asd = redirect(id2)  # HttpResponse
 	if not 'id_list_basket' in request.COOKIES:

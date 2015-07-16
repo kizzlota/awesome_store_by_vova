@@ -10,10 +10,6 @@
 {% endblock %}
 
 
-{% block busket %}
-    {% include 'catalog/busket.html' %}
-{% endblock %}
-
 
 
 {%  block content %}
@@ -59,9 +55,12 @@
                  <form action="/busket/" method="GET" class="form-horizontal col-md-6" role="form">
                    <div class="form-group ">
                       <label for="sel1">choose a size:</label>
-                      <select class="form-control" name="shoe">
-                        {% for size in param.rel_to_size.all %}
-                          <option value="{{ size.id }}" >{{ size.zise }}</option>
+                      <select class="form-control" name="id">
+
+                          {% for size in param.rel_to_size.all %}
+                              {%  if size.quantity > 0 %}
+                          <option value="{{ size.id }}" >{{ size.size }}</option>
+                              {% endif %}
                        {% endfor %}
                       </select>
                     </div>

@@ -18,42 +18,57 @@
 {#    </div>#}
 {##}
 
-Bootom
 
-{% for ord in basket_info %}
+
+    {% for bas in basket %}
+        {% for shoe_detail in bas.shoes_id.shoeparameters_set.all %}
+
     <div class="media" >
   <div class="media-left media-middle">
 
     <a href="#">
-      <img class="img-rounded" src="/media/{{ ord.shoes_id.main_image }}"  width="98px" alt="...">
+      <img class="img-rounded" src="/media/{{ shoe_detail.main_image }}"  width="120px" alt="...">
     </a>
 
   </div>
   <div class="media-body">
-    <h4 class="media-heading" style="font-family: cursive">Назва моделі: {{ ord.shoes_id.name }}</h4>
-
+      {% for shoe_name in shoe_detail.shoes_set.all %}
+    <h4 class="media-heading" style="font-family: cursive">Назва моделі: {{ shoe_name.name }}</h4>
+        {%  endfor %}
   </div>
       <div class="media-right">
-    <h4 class="media-heading" style="font-size: medium">Ціна: {{ ord.shoes_id.price }}</h4>
+    <h4 class="media-heading" style="font-size: medium">Ціна: {{ shoe_detail.price }} грн.</h4>
 
   </div>
 
-        {% for ii in ord.shoes_id.size.all %}
-            {% if ii.quantity > 0 %}
-               <p> {{ ii.size }}</p>
-                {% else %}
-            {% endif %}
 
-            {%  for i in ord.shoes_id.rel_to_size.all %}
-                {% for ii in i.all %}
-                    <p>{{ ii.size }}</p>
-                    {% endfor %}
-                    {% endfor %}
+
+                 <form action="/busket/" method="GET" class="form-horizontal col-md-6" role="form">
+                   <div class="form-group ">
+                      <label for="sel1">choose a size:</label>
+                      <select class="form-control" name="id">
+
+                          {% for size in shoe_detail.rel_to_size.all %}
+                              {%  if size.quantity > 0 %}
+                          <option value="{{ size.id }}" >{{ size.size }}</option>
+                              {% endif %}
+                       {% endfor %}
+                      </select>
+                    </div>
+
+
+                     </form>
+
+
+
+
+
+
 
     <div class="media-right">
-        <label for="{{ ord.shoes_id.id }}">Кількість</label> <button class="button"><a href="/busket_del/?id={{ ord.id }}" >видалити з кошика</a></button> <br>
-        <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ ord.shoes_id.id }}" min="1" type="number"
-               value="1" max="{{ ord.shoes_id.quantity }}"></div>
+        <label for="{{ bas.id }}">Кількість</label> <button class="button"><a href="/busket_del/?id={{ bas.id }}" >видалити з кошика</a></button> <br>
+        <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ shoe_detail.id }}" min="1" type="number"
+               value="1" max="{{ shoe_detail.quantity }}"></div>
     </div>
 
 <script>

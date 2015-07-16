@@ -12,17 +12,12 @@
 
 
 
- {% block busket %}
-{% include 'catalog/busket.html' %}
- {% endblock %}
-
 
 {% block content %}
 
 
 {% for shoe in shoes %}
     {%  for params in shoe.relation_to_shoes_params.all %}
-         {% for shoes_size_params in params.rel_to_size.all %}
 
     <div class="col-sm-5 col-md-3">
 <div class="thumbnail">
@@ -31,19 +26,22 @@
         <h3>{{ shoe.name }}</h3>
         <p>{{ shoe.decription }}</p>
               <p><a href="#" class="btn btn-primary" role="button">{{ params.price }}</a>
+        {% for shoes_size_params in params.rel_to_size.all %}
 
-                  {%  if shoes_size_params.quantity > 0 and not shoe.id in id_list %}
-                  <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
 
-                {% elif shoe.id in id_list %}
+          {%  if shoes_size_params.quantity > 0 and not shoe.id in id_list and shoes_size_params.shoe_bool  %}
+                  <a href="/busket/?id={{ shoes_size_params.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
+
+                {% elif shoe.id in id_list and  shoes_size_params.shoe_bool %}
                     already in busket
-          {%  else %}
-                   <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">нема в наявності</a> </p>
+          {%  elif shoes_size_params.shoe_bool %}
+                   <a href="" class="btn btn-primary disabled" role="button">нема в наявності</a> </p>
           {% endif %}
+       {% endfor %}
       </div>
  </div>
  </div>
-{%  endfor %}
+
 {%  endfor %}
 {% endfor %}
 {% endblock %}

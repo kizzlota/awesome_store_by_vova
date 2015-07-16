@@ -47,6 +47,30 @@
               </form>
 
               <ul class="nav navbar-nav navbar-right">
+
+          <li class="dropdown" >
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Basket <img src="/static/img/Online_Shopping_cart_32.png">  <span class="badge">{{ basket|length }}</span></a>
+            <div class="dropdown-menu " style="width: 350px">
+
+        <div style="margin: 15px;" >
+
+   {% if basket %}
+
+    {% for bas in basket %}
+        {% for shoe_detail in bas.shoes_id.shoeparameters_set.all %}
+      <img src="/media/{{ shoe_detail.main_image }}" width="64px" class="img-rounded" />{{ bas.id }} {{ shoe_detail.model_of_shoe }} <a href="/busket_del/?id={{ bas.id }}" >X</a> <br>
+
+    {% endfor %}
+    {% endfor %}
+<br>
+    <a href="/orders/new/" target="_blank" class="btn btn-primary btn-sm btn-success" role="button">Submit</a>
+
+
+{%  endif %}
+
+        </div>
+            </div>
+            </li><!--/.login dropbox -->
                {% if user.is_authenticated %}
                     {% if user.is_superuser %}
 

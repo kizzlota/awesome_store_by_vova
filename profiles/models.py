@@ -55,7 +55,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     user_bio = models.TextField(max_length=1200, blank=True)
 
 
-    user_details = models.ForeignKey(UserAddress)
+    user_details = models.ForeignKey(UserAddress, null=True, default=2)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']
