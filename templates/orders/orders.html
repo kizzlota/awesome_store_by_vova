@@ -41,41 +41,53 @@
 
   </div>
 
-
-
-                 <form action="/busket/" method="GET" class="form-horizontal col-md-6" role="form">
-                   <div class="form-group ">
+                   <div class="form-group col-md-4">
                       <label for="sel1">choose a size:</label>
-                      <select class="form-control" name="id">
-
+                      <select class="form-control" name="id" id="jsSelect" onChange="jsFunction()">
+                      <script>
+                          var sizeQuantity = {};
+                      </script>
                           {% for size in shoe_detail.rel_to_size.all %}
                               {%  if size.quantity > 0 %}
                           <option value="{{ size.id }}" >{{ size.size }}</option>
+                                  <script>
+                                  sizeQuantity[{{ size.id }}] = {{ size.quantity }};
+                                  </script>
                               {% endif %}
                        {% endfor %}
                       </select>
                     </div>
 
 
-                     </form>
+<script>
 
+    function jsFunction(){
+    $('#jsSelect').each(function(){
+    var $this = $(this); // cache this jQuery object to avoid overhead
+    console.log( $this.val());
+    console.log(sizeQuantity[$this.val()]);
+        $( ".ShoeQuan").attr({'max': sizeQuantity[$this.val()]});
+        $('#available').text('Available only '+ sizeQuantity[$this.val()] +' pairs')
 
+});
+    }
 
-
-
-
-
+</script>
     <div class="media-right">
         <label for="{{ bas.id }}">Кількість</label> <button class="button"><a href="/busket_del/?id={{ bas.id }}" >видалити з кошика</a></button> <br>
-        <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ shoe_detail.id }}" min="1" type="number"
-               value="1" max="{{ shoe_detail.quantity }}"></div>
+        <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ bas.shoes_id.id }}" min="1" type="number"
+               value="1" max="{{ bas.shoes_id.quantity }}"> <span id="available"> Available only {{ bas.shoes_id.quantity }} pairs</span></div>
     </div>
 
 <script>
   function maxLengthCheck(object)
   {
-    if (object.value.length > object.maxLength)
-      object.value = object.value.slice(0, object.maxLength)
+    if (object.value.length > object.maxLength){
+      object.value = object.value.slice(0, object.maxLength);
+    }
+    if (object.value > object.max){
+      object.value = object.max;
+    }
   }
 </script>
 
@@ -130,7 +142,7 @@
  <input id="id_shoes_quantity" maxlength="550" name="shoes_quantity"  type="text" hidden/>
 <script>
 
-            var elements = document.getElementsByClassName("ShoeQuan");
+    var elements = document.getElementsByClassName("ShoeQuan");
         var names = {};
         for(var i=0; i<elements.length; i++) {
             names[elements[i].id] = elements[i].value;
@@ -147,14 +159,17 @@
 
         {{ user_info.order_id.label }}
         <select multiple="multiple" id="id_order_id" name="order_id">
-        {% for ord in basket_info %}
-            <option value="{{ ord.shoes_id.id }}" selected="selected"> {{ ord.shoes_id.name }}</option>
+        {% for ord in basket %}
+              {% for shoe_detail in ord.shoes_id.shoeparameters_set.all %}
+
+            <option value="{{ ord.shoes_id.id }}" selected="selected"> {{ shoe_detail.name }}</option>
+        {% endfor %}
         {% endfor %}
         </select>
     </div>
 
         </ul>
-    <input type="submit" value="OK" class="btn btn-default">
+    <input type="submit" value="Form order" class="btn btn-default">
 </form>
 
 

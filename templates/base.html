@@ -94,7 +94,9 @@
               {{ user.username }} <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="/profiles/list_orders">list of orders</a></li>
-            <li><a href="#">Another action</a></li>
+           {%  if user.is_staff %}
+              <li><a href="/orders/list_all_orders">list of all orders</a></li>
+              {%  endif %}
             <li><a href="#">Search</a></li>
             <li role="separator" class="divider"></li>
             <li ><a href="/profiles/logout/">log out</a></li>

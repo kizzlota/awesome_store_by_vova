@@ -25,7 +25,9 @@ def new_order(request):
 
 	if request.method == 'POST':  # якщо метод з форми є POST тоді наступне
 		name_form = OrderForm(request.POST)  # свторюємо PostForm з даними з форми
+		print "before valid"
 		if name_form.is_valid():  # валідація
+			print "after valid"
 			post = name_form.save(commit=False)  # відтермінування збереження форми комміт=фолс
 			post.save()  # saving and redirecting
 			name_form.save_m2m()
@@ -60,9 +62,10 @@ def finded_orders(request):
 	return render(request, 'orders/find_all_orders.html',
 	              {'users_list_orders': objects_in_orders, 'total_sum': total_sum})
 
-#
-# def new_user_order(request):
-# 	if "basket_cook" in request.COOKIES:
-# 		get_cookies = request.COOKIES['basket_cook']
-# 		fotos = Shoes.objects.filter(name=get_cookies)
-# 	return render(request, 'catalog/for_test.html', {'frg': get_cookies, 'fotos': fotos})
+
+def list_orders(request):
+	print "done"
+	if request.user.is_staff:
+		all_orders_info = OrderModel.objects.all().order_by('-id')
+
+	return render(request, 'orders/list_orders.html', {'all_orders_info': all_orders_info})

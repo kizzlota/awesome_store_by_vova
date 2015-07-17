@@ -1,0 +1,70 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+  <h2>Orders List</h2>
+  <table class="table table-hover">
+    <thead>
+      <tr>
+
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Quantity</th>
+        <th>Order_id</th>
+        <th>Photo</th>
+        <th>Order_details</th>
+      </tr>
+    </thead>
+    <tbody>
+         {% for order in all_orders_info %}
+           {% for item in order.order_id.all %}
+      <tr>
+        <td> {{ order.id }}</td>
+        <td>{{ order.user_name }}</td>
+        <td> {{ order.user_mail }}</td>
+        <td> {{ order.user_phone }}</td>
+        <td> {{ order.shoes_quantity }}</td>
+        <td> {{ order.order_id }}</td>
+         <td> <img src="/media/{{ item.main_image }}" width="96px"></td>
+        <td> {{ item.model_of_shoe }}</td>
+
+      </tr>
+        {% endfor %}
+        {% endfor %}
+  </table>
+</div>
+
+</body>
+</html>
+
+
+
+
+
+
+
+{%  block content %}
+        {% for order in all_orders_info %}
+           {% for item in order.order_id.all %}
+            {{ order.id }}<br>
+            {{ order.name }}<br>
+            {{ order.phone }}<br>
+            {{ order.order_id }}<br>
+               {{ item.model_of_shoe }}<br>
+               {{ item.price }}
+        {% endfor %}
+        {% endfor %}
+{%  endblock %}

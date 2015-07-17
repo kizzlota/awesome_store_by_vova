@@ -45,9 +45,10 @@ class OrderModel(models.Model):
 		x = self.shoes_quantity
 		x = json.loads(x)
 		for i, j in x.iteritems():
-			id_in_shoes = ShoeParameters.objects.get(id=i)
+			id_in_shoes = ShoeSizeParams.objects.get(id=i)
+			print id_in_shoes
 			id_in_shoes.quantity -= int(j)
-			id_in_shoes.save()
+			print id_in_shoes
 			print i, j
 
 	# @receiver(post_save, sender=OrderModel)
