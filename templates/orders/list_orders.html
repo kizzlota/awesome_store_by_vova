@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>List orders</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -23,16 +23,17 @@
         <th>Email</th>
         <th>Phone</th>
         <th>Quantity</th>
-        <th>Order_id</th>
+        <th>Order id</th>
         <th>Photo</th>
-        <th>Order_details</th>
+        <th>Order details</th>
+        <th>Total Sum</th>
       </tr>
     </thead>
     <tbody>
          {% for order in all_orders_info %}
            {% for item in order.order_id.all %}
       <tr>
-        <td> {{ order.id }}</td>
+        <td> <a href="/orders/order_detail/?o={{ order.id }}">{{ order.id }}</a></td>
         <td>{{ order.user_name }}</td>
         <td> {{ order.user_mail }}</td>
         <td> {{ order.user_phone }}</td>
@@ -40,6 +41,7 @@
         <td> {{ order.order_id }}</td>
          <td> <img src="/media/{{ item.main_image }}" width="96px"></td>
         <td> {{ item.model_of_shoe }}</td>
+        <td> {{ item.price }}</td>
 
       </tr>
         {% endfor %}

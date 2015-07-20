@@ -14,7 +14,14 @@
 
 
 {% block content %}
+    {% if alert %}
+        <div class="alert alert-warning alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Thank you for order! </strong>
+                    <a href="/orders/new/" target="_blank" class="btn btn-primary btn-sm btn-success" role="button">оформити замовлення</a>
+                <br>
 
+    {% endif %}
 
 {% for shoe in shoes %}
     {%  for params in shoe.relation_to_shoes_params.all %}
@@ -29,7 +36,7 @@
         {% for shoes_size_params in params.rel_to_size.all %}
 
 
-          {%  if shoes_size_params.quantity > 0 and not shoe.id in id_list and shoes_size_params.shoe_bool  %}
+          {%  if shoes_size_params.quantity > 0 and not shoes_size_params.id in id_list and shoes_size_params.shoe_bool  %}
                   <a href="/busket/?id={{ shoes_size_params.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
 
                 {% elif shoe.id in id_list and  shoes_size_params.shoe_bool %}

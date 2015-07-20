@@ -64,8 +64,14 @@ def finded_orders(request):
 
 
 def list_orders(request):
-	print "done"
 	if request.user.is_staff:
 		all_orders_info = OrderModel.objects.all().order_by('-id')
 
 	return render(request, 'orders/list_orders.html', {'all_orders_info': all_orders_info})
+
+
+def order_detail(request):
+	user_data = request.GET.get('o')
+
+
+	return render(request, 'orders/order_detail.html', {})
