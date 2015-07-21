@@ -1,72 +1,89 @@
+{% extends 'base.html' %}
+{% load humanize %}
 
+{% block content %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>List orders</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-</head>
-<body>
-
-<div class="container">
   <h2>Orders List</h2>
+
+
+
+
   <table class="table table-hover">
     <thead>
       <tr>
 
+        <th></th>
         <th>ID</th>
         <th>Username</th>
         <th>Email</th>
         <th>Phone</th>
-        <th>Quantity</th>
-        <th>Order id</th>
-        <th>Photo</th>
+        <th>Adress</th>
         <th>Order details</th>
         <th>Total Sum</th>
+          <th>Date</th>
+          <th>Status</th>
       </tr>
     </thead>
     <tbody>
          {% for order in all_orders_info %}
-           {% for item in order.order_id.all %}
-      <tr>
-        <td> <a href="/orders/order_detail/?o={{ order.id }}">{{ order.id }}</a></td>
+
+      <tr >
+         <td data-toggle="collapse" data-target="#demo_{{ order.id }}" class="accordion-toggle"><span class="glyphicon glyphicon-eye-open"></span></td>
+        <td > <a href="/orders/order_detail/?o={{ order.id }}">{{ order.id }}</a></td>
+
         <td>{{ order.user_name }}</td>
         <td> {{ order.user_mail }}</td>
         <td> {{ order.user_phone }}</td>
-        <td> {{ order.shoes_quantity }}</td>
+        <td> {{ order.user_adress }}</td>
         <td> {{ order.order_id }}</td>
-         <td> <img src="/media/{{ item.main_image }}" width="96px"></td>
-        <td> {{ item.model_of_shoe }}</td>
-        <td> {{ item.price }}</td>
+          <td>{{ order.price }}</td>
+          <td>{{ order.date }}</td>
+          <td>{{ order.status }}</td>
+
 
       </tr>
+             <tr >
+            <td colspan="9" class="hiddenRow"><div class="accordian-body collapse" id="demo_{{ order.id }}">
+
+
+                 <table class="table table-hover">
+                <thead>
+      <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Model</th>
+        <th>Quantity</th>
+
+      </tr>
+    </thead>
+  {%  for ii in order.shoe_size_id %}
+                <tr>
+
+
+            {% for param in ii.shoeparameters_set.all %}
+        <td><a href="/orders/order_detail/?o={ order.id }">{{ ii.id }} </a></td>
+        <td>{{ param.price }} </td>
+        <td> { order.user_mail }</td>
+        <td> {{ param.model_of_shoe }}</td>
+        <td> { order.shoes_quantity }</td>
+        <td> <img src="/media/{{ param.main_image }}" width="96px"> </td>
+
+
+      </tr>
+                   {% endfor %}
         {% endfor %}
+                </table>
+
+
+            </div> </td>
+        </tr>
+
+
+
         {% endfor %}
+
+
+  </tbody>
   </table>
-</div>
-
-</body>
-</html>
-
-
-
-
-
-
-
-{%  block content %}
-        {% for order in all_orders_info %}
-           {% for item in order.order_id.all %}
-            {{ order.id }}<br>
-            {{ order.name }}<br>
-            {{ order.phone }}<br>
-            {{ order.order_id }}<br>
-               {{ item.model_of_shoe }}<br>
-               {{ item.price }}
-        {% endfor %}
-        {% endfor %}
-{%  endblock %}
+{% endblock %}

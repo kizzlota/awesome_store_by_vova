@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('catalog', '0001_initial'),
+        ('catalog', '__first__'),
     ]
 
     operations = [
@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
                 ('data_user_hash', models.CharField(max_length=200)),
                 ('quantity', models.IntegerField(null=True, blank=True)),
                 ('date', models.DateTimeField(auto_now_add=True)),
-                ('shoes_id', models.ForeignKey(to='catalog.ShoeParameters')),
+                ('shoes_id', models.ForeignKey(to='catalog.ShoeSizeParams')),
             ],
         ),
         migrations.CreateModel(

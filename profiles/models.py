@@ -4,16 +4,14 @@ from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 
-
 class UserManager(BaseUserManager):
-
     def create_user(self, username, email=None, password=None, **extra_fields):
         now = timezone.now()
         if not username:
             raise ValueError(_('The given username must be set'))
         user = self.model(username=username, email=self.normalize_email(email),
                           last_login=now, date_joined=now, **extra_fields)
-        user.is_active = True
+        user.is_active = False
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -25,12 +23,16 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
+
 class UserAddress(models.Model):
     phone = models.CharField(max_length=100, blank=True, null=True)
-    address = models.CharField(max_length=150, blank=True, null=True)
+    address = models.TextField(max_length=1500, blank=True, null=True)
     city = models.CharField(max_length=150, blank=True, null=True)
     street = models.CharField(max_length=150, blank=True, null=True)
     country = models.CharField(max_length=50, blank=True, null=True)
+
+    def __unicode__(self):
+        return self.phone
 
 
 class User(AbstractBaseUser, PermissionsMixin):
@@ -54,8 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     user_bio = models.TextField(max_length=1200, blank=True)
 
-
-    user_details = models.ForeignKey(UserAddress, null=True, default=2)
+    user_details = models.ForeignKey(UserAddress, null=True, default=1)
 
     USERNAME_FIELD = 'username'
     REQUIRED_FIELDS = ['email']

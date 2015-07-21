@@ -1,112 +1,119 @@
 {% extends 'base.html' %}
-{%  include '' %}
+{% include '' %}
 
 {% block leftList %}
-{% for index in category %}
+    {% for index in category %}
 
-    <a href="/?c={{ index.name }}" class="list-group-item">   {{ index.name }}</a>
+        <a href="/?c={{ index.name }}" class="list-group-item">   {{ index.name }}</a>
 
- {% endfor %}
+    {% endfor %}
 {% endblock %}
 
 
 
 
-{%  block content %}
+{% block content %}
 
     <div class="row">
-          <div class="col-md-6"  >
-            {%  for shoe in indiv_shoe %}
-            {%  for param in shoe.relation_to_shoes_params.all %}
+        <div class="col-md-6">
+            {% for shoe in indiv_shoe %}
+                {% for param in shoe.relation_to_shoes_params.all %}
 
-            {%  if param.id == params_id %}
-            <img src="/media/{{ param.main_image }}" width="480px" style="border: 1px solid lightgrey; " />
-                <p>Available colors:</p>
-                    {%  for color in shoe.relation_to_shoes_params.all %}
-                     <a href="/shoe_ind/{{ shoe.id }}/{{ color.id }}"><img src="/media/{{ color.main_image }}" width="54px" style="border: 5px dashed {{ color.color }};" alt="..."></a>
+                    {% if param.id == params_id %}
+                        <img src="/media/{{ param.main_image }}" width="480px" style="border: 1px solid lightgrey; "/>
+                        <p>Available colors:</p>
+                        {% for color in shoe.relation_to_shoes_params.all %}
+                            <a href="/shoe_ind/{{ shoe.id }}/{{ color.id }}"><img src="/media/{{ color.main_image }}"
+                                                                                  width="54px"
+                                                                                  style="border: 5px dashed {{ color.color }};"
+                                                                                  alt="..."></a>
 
-                    {%  endfor %}
-            <br>
-            <br>
-            <div class="col-sm-8">
+                        {% endfor %}
+                        <br>
+                        <br>
+                        <div class="col-sm-8">
 
-                {% for pic_few in param.relation_to_shoes_photos.all %}
-                <div class="col-md-5 col-md-offset-1" style="border: 1px solid lightgrey; ">
-                <img src="/media/{{ pic_few.images }}" width="150px" /></div>
+                            {% for pic_few in param.relation_to_shoes_photos.all %}
+                                <div class="col-md-5 col-md-offset-1" style="border: 1px solid lightgrey; ">
+                                    <img src="/media/{{ pic_few.images }}" width="150px"/></div>
+                            {% endfor %}
+
+                        </div>
+                        </div>
+
+                        <div class="col-md-4">
+                            <img src="/static/img/tov_garanat.jpg" width="300px"/>
+
+                            <p> Mabyfacturer: {{ shoe.manufacturer }}</p>
+
+                            <p>model: {{ param.model_of_shoe }}</p>
+                            {% if param.new_price %}
+                                <p>price: <strike>{{ param.price }}</strike> <b>{{ param.new_price }} uah</b></p>
+                            {% else %}
+                                <p>price: {{ param.price }} uah</p>
+                            {% endif %}
+                            <hr>
+                            <p>material: {{ param.material }}</p>
+
+                            <p>vkladka: {{ param.vkladka }}</p>
+                            <hr>
+                            <p>make order:</p>
+
+                            <form action="/busket/" method="GET" class="form-horizontal col-md-6" role="form">
+                                <div class="form-group ">
+                                    <label for="sel1">choose a size:</label>
+                                    <select class="form-control" name="id">
+
+                                        {% for size in param.rel_to_size.all %}
+                                            {% if size.quantity > 0 %}
+                                                <option value="{{ size.id }}">{{ size.size }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-default">Buy</button>
+
+                                </div>
+                            </form>
+
+                        </div>
+                        </div>
+
+                    {% endif %}
+                {% endfor %}
             {% endfor %}
 
-            </div>
-                </div>
-
-                <div class="col-md-4">
-                <img src="/static/img/tov_garanat.jpg" width="300px" />
-               <p> Mabyfacturer: {{ shoe.manufacturer }}</p>
-                <p>model: {{ param.model_of_shoe }}</p>
-                {% if param.new_price  %}
-                    <p>price: <strike>{{ param.price }}</strike> <b>{{ param.new_price }} uah</b></p>
-                {% else %}
-                    <p>price: {{ param.price }} uah</p>
-                {% endif %}
-                <hr>
-                     <p>material: {{ param.material }}</p>
-                    <p>vkladka: {{ param.vkladka }}</p>
-                    <hr>
-                <p>make order:</p>
-                 <form action="/busket/" method="GET" class="form-horizontal col-md-6" role="form">
-                   <div class="form-group ">
-                      <label for="sel1">choose a size:</label>
-                      <select class="form-control" name="id">
-
-                          {% for size in param.rel_to_size.all %}
-                              {%  if size.quantity > 0 %}
-                          <option value="{{ size.id }}" >{{ size.size }}</option>
-                              {% endif %}
-                       {% endfor %}
-                      </select>
-                    </div>
-
-                     <div class="form-group">
-                         <button type="submit" class="btn btn-default">Buy</button>
-
-                     </div>
-                     </form>
-
-                </div>
-   </div>
-
-                {% endif %}
-        {% endfor %}
-        {% endfor %}
-
     <div>
-        {%  for i in pictures_shoes %}
-        <img src="/media/{{ i }}" width="240px" />
+        {% for i in pictures_shoes %}
+            <img src="/media/{{ i }}" width="240px"/>
         {% endfor %}
 
-    <!--
-    ---------------------------------------------------------------------------------------------------------------
-    -->
-    {% for shoe in images_few %}
+        <!--
+        ---------------------------------------------------------------------------------------------------------------
+        -->
+        {% for shoe in images_few %}
 
-    <div class="col-sm-5 col-md-3">
+            <div class="col-sm-5 col-md-3">
 
-      <div class="caption">
-        <p>{{ shoe.decription }}</p>
+                <div class="caption">
+                    <p>{{ shoe.decription }}</p>
 
-            {%  if shoe.quantity > 0 and not shoe.id in id_list %}
-                  <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
-                {% elif shoe.id in id_list %}
-                    already in busket
-          {%  else %}
-                   <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">nema</a> </p>
-          {% endif %}
-      </div>
- </div>
+                    {% if shoe.quantity > 0 and not shoe.id in id_list %}
+                        <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
+                    {% elif shoe.id in id_list %}
+                        already in busket
+                    {% else %}
+                        <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">nema</a> </p>
+                    {% endif %}
+                </div>
+            </div>
 
 
-{% endfor %}
+        {% endfor %}
     </div>
 
 
 
-{%  endblock %}
+{% endblock %}

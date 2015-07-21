@@ -3,6 +3,6 @@ from busket.models import OrderModel
 
 
 class OrderForm(ModelForm):
-	class Meta:
-		model = OrderModel
-		fields = '__all__'
+    class Meta:
+        model = OrderModel
+        fields = 'user_name', 'user_phone', 'user_address', 'user_mail', 'shoes_quantity'

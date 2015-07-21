@@ -1,177 +1,194 @@
 {% extends 'base.html' %}
-
+{% load humanize %}
 
 {% block content %}
-{##}
-{#    <div class="text-info" style="border: 2px solid greenyellow">#}
-{#     {% for i in find_in_basket %}#}
-{#        {% for j in i.relation_to_shoes_params.all %}#}
-{##}
-{#        <p><b> назва моделі: {{ i.name }}</b>Ціна:{{ j.price }}</p>#}
-{#         <img src="/media/{{ j.main_image }}" width="240px">#}
-{#          <button class="button"><a href="/busket_del/?idc={{ i.id }}" >видалити з кошика</a></button>#}
-{##}
-{#         {% endfor %}#}
-{#         {% endfor %}#}
-{#  <br>#}
-{#  <br>#}
-{#    </div>#}
-{##}
 
+    <script>
+        var sizeQuantity = {};
+        var shoePrice = {};
+    </script>
 
-
-    {% for bas in basket %}
+    {% for bas in basket.0 %}
         {% for shoe_detail in bas.shoes_id.shoeparameters_set.all %}
 
-    <div class="media" >
-  <div class="media-left media-middle">
+            <div class="row media" style="border: 1px solid lightgrey; ">
+                <div class="media-left media-middle">
 
-    <a href="#">
-      <img class="img-rounded" src="/media/{{ shoe_detail.main_image }}"  width="120px" alt="...">
-    </a>
+                    <a href="#">
+                        <img class="img-rounded" src="/media/{{ shoe_detail.main_image }}" width="120px" alt="...">
+                    </a>
 
-  </div>
-  <div class="media-body">
-      {% for shoe_name in shoe_detail.shoes_set.all %}
-    <h4 class="media-heading" style="font-family: cursive">Назва моделі: {{ shoe_name.name }}</h4>
-        {%  endfor %}
-  </div>
-      <div class="media-right">
-    <h4 class="media-heading" style="font-size: medium">Ціна: {{ shoe_detail.price }} грн.</h4>
+                </div>
+                <div class="media-body">
+                    {% for shoe_name in shoe_detail.shoes_set.all %}
+                        <h4 class="media-heading" style="font-family: cursive">{{ shoe_name.name }}</h4>
+                         <h5 class="media-heading" style="font-family: cursive">Назва моделі: {{ shoe_detail.model_of_shoe }}</h5>
+                    {% endfor %}
+                </div>
+                <div class="media-right">
+                    <h4 class="media-heading" style="font-size: medium">Ціна: {{ shoe_detail.price|intcomma }} грн.</h4>
 
-  </div>
+                </div>
 
-                   <div class="form-group col-md-4">
-                      <label for="sel1">choose a size:</label>
-                      <select class="form-control" name="id" id="jsSelect" onChange="jsFunction()">
-                      <script>
-                          var sizeQuantity = {};
-                      </script>
-                          {% for size in shoe_detail.rel_to_size.all %}
-                              {%  if size.quantity > 0 %}
-                          <option value="{{ size.id }}" >{{ size.size }}</option>
-                                  <script>
-                                  sizeQuantity[{{ size.id }}] = {{ size.quantity }};
-                                  </script>
-                              {% endif %}
-                       {% endfor %}
-                      </select>
-                    </div>
+                <div class="form-group col-md-3">
+                    <label for="sel1">Вибиріть розмір:</label>
+                    <select class="form-control" name="id" id="jsSelect_{{ bas.shoes_id.id }}"
+                            onChange="jsFunction_{{ bas.shoes_id.id }}()">
+
+                        {% for size in shoe_detail.rel_to_size.all %}
+                            {% if size.quantity > 0 %}
+                                <option value="{{ size.id }}">{{ size.size }}</option>
+                                <script>
+                                    sizeQuantity[{{ size.id }}] = {{ size.quantity }};
+                                    shoePrice[{{ size.id }}] = {{ shoe_detail.price }};
+                                </script>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                </div>
 
 
-<script>
+                <script>
+                    console.log(sizeQuantity);
+                    function jsFunction_{{ bas.shoes_id.id }}() {
+                        $('#jsSelect_{{ bas.shoes_id.id }}').each(function () {
+                            var $this = $(this); // cache this jQuery object to avoid overhead
+                            console.log($this.val()); // shoes size id
 
-    function jsFunction(){
-    $('#jsSelect').each(function(){
-    var $this = $(this); // cache this jQuery object to avoid overhead
-    console.log( $this.val());
-    console.log(sizeQuantity[$this.val()]);
-        $( ".ShoeQuan").attr({'max': sizeQuantity[$this.val()]});
-        $('#available').text('Available only '+ sizeQuantity[$this.val()] +' pairs')
+                            $(".ShoeQuan_{{ bas.shoes_id.id }}").attr({'max': sizeQuantity[$this.val()] });
+                            $(".ShoeQuan_{{ bas.shoes_id.id }}").attr({'id': $this.val() });
+                            $('#available_{{ bas.shoes_id.id }}').text('Доступно на складі ' + sizeQuantity[$this.val()] + ' пар.')
+                            updateInput();
+                        });
+                    }
 
-});
-    }
+                </script>
+                <div class="form-group col-md-6">
+                    <label for="{{ bas.id }}">Кількість:</label>
 
-</script>
-    <div class="media-right">
-        <label for="{{ bas.id }}">Кількість</label> <button class="button"><a href="/busket_del/?id={{ bas.id }}" >видалити з кошика</a></button> <br>
-        <input class="ShoeQuan" onchange="updateInput()" oninput="maxLengthCheck(this)" maxlength = "2" id="{{ bas.shoes_id.id }}" min="1" type="number"
-               value="1" max="{{ bas.shoes_id.quantity }}"> <span id="available"> Available only {{ bas.shoes_id.quantity }} pairs</span></div>
-    </div>
+                    <br>
+                    <input class="ShoeQuan ShoeQuan_{{ bas.shoes_id.id }}" onchange="updateInput()"
+                           oninput="maxLengthCheck(this)" maxlength="2" id="{{ bas.shoes_id.id }}" min="1" type="number"
+                           value="1" max="{{ bas.shoes_id.quantity }}"> <span id="available_{{ bas.shoes_id.id }}"> Доступно на складі {{ bas.shoes_id.quantity }} пар.</span>
+                </div>
+                <div class="form-group col-md-3">
+                  <button class="button"><a href="/busket_del/?id={{ bas.id }}">видалити з кошика</a></button>
+                </div>
+            </div>
 
-<script>
-  function maxLengthCheck(object)
-  {
-    if (object.value.length > object.maxLength){
-      object.value = object.value.slice(0, object.maxLength);
-    }
-    if (object.value > object.max){
-      object.value = object.max;
-    }
-  }
-</script>
 
-{% endfor %}
-{% endfor %}
-<br>
-    <p class="text-info" style="background-color: lightgrey">Загальна сума {{ full_price }}</p>
-<hr>
+
+        {% endfor %}
+    {% endfor %}
+    <br>
+    <p class="text-info" style="background-color: lightgrey">Загальна сума: {{ full_price|intcomma }} грн.  JS: <span class="fullPrice"></span> </p>
+    <hr>
     <form action="/orders/new/" method="POST" class="form-horizontal" role="form">
-    {% csrf_token %}
-    {% if user.is_authenticated %}
-         <label for="your_name">Hi, you are already logged as {{ user_credentials.username }} </label>
-    {% else %}
-         <label for="your_name">дані покупця : </label>
-    {% endif %}
-    <ul class="list-group">
-    {% if user.is_authenticated %}
-   <div style="display: none">
-       username: <input id="id_user_name" maxlength="100" name="user_name" type="text" value="{{ user_credentials.username }}"> <br>
-       Email:  <input id="id_user_mail" maxlength="100" name="user_mail" type="email" value="{{ user_credentials.user_mail }}">
-   </div >
-       Phone: <input id="id_user_phone" maxlength="100" name="user_phone" type="text" value="{{ user_credentials.phone }}">
-       Address: <textarea cols="40" id="id_user_address" maxlength="350" name="user_address" rows="10">{{ user_credentials.address }}</textarea>
+        {% csrf_token %}
 
-    {%  else %}
-          {{ user_info.non_field_errors }}
-       <li class="list-group-item-info"> {{ user_info.user_name.label_tag }}{{ user_info.user_name }}</li>
 
-       <li class="list-group-item-info"> {{ user_info.user_mail.label }}{{ user_info.user_mail }}</li>
-        {{ user_info.user_mail.errors }}
+            {% if user.is_authenticated %}
+                <div style="display: none">
+                    username: <input id="id_user_name" maxlength="100" name="user_name" type="text"
+                                     value="{{ user.username }}"> <br>
+                    Email: <input id="id_user_mail" maxlength="100" name="user_mail" type="email"
+                                  value="{{ user.email }}">
+                </div>
 
-        <li class="list-group-item-info"> {{ user_info.user_phone.label }}{{ user_info.user_phone }}</li>
-        {{ user_info.user_phone.errors }}
-       <li class="list-group-item-info" >{{ user_info.user_address.label }}{{ user_info.user_address }}</li>
-        <br>{{ user_info.user_address.errors }}
-    {% endif %}
- <script>
-    function updateInput(){
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label for="id_user_phone">Телефон:</label>
+                        <input id="id_user_phone" class="form-control" maxlength="25"  value="{{ user.user_details.phone }}" name="user_phone" type="text"/>
+                    </div>
+                </div>
 
-        var elements = document.getElementsByClassName("ShoeQuan");
-        var names = {};
-        for(var i=0; i<elements.length; i++) {
-            names[elements[i].id] = elements[i].value;
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label for="id_user_address">Адрес доставки:</label>
+                        <textarea cols="30" class="form-control" id="id_user_address" name="user_address" rows="5">{{ user.user_details.address }}</textarea>
+                    </div>
+                </div>
+            {% else %}
+                {{ user_info.non_field_errors }}
+                <li class="list-group-item-info"> {{ user_info.user_name.label_tag }}{{ user_info.user_name }}</li>
+
+                <li class="list-group-item-info"> {{ user_info.user_mail.label }}{{ user_info.user_mail }}</li>
+                {{ user_info.user_mail.errors }}
+
+                <div class="form-group">
+                    <div class="col-md-4">
+                        <label for="id_user_phone">Телефон:</label>
+                        <input id="id_user_phone" class="form-control" maxlength="25"  value="{{ user.user_details.phone }}" name="user_phone" type="text"/>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label for="id_user_address">Адрес доставки:</label>
+                        <textarea cols="30" class="form-control" id="id_user_address" name="user_address" rows="5">{{ user.user_details.address }}</textarea>
+                    </div>
+                </div>
+            {% endif %}
+
+            <script>
+                function updateInput() {
+
+                    var elements = document.getElementsByClassName("ShoeQuan");
+                    var names = {};
+                    for (var i = 0; i < elements.length; i++) {
+                        names[elements[i].id] = elements[i].value;
+                    }
+                    // console.log(names);
+                    document.getElementById("id_shoes_quantity").value = JSON.stringify(names);
+                    var fullPrice = 0;
+                    for (i in names){
+                        fullPrice += shoePrice[i] * names[i];
+
+                    }
+                    $('.fullPrice').text(fullPrice);
+                }
+
+
+            </script>
+            <div class="form-group">
+                <input id="id_shoes_quantity" maxlength="550" name="shoes_quantity" type="text"/>
+            </div >
+            <script>
+
+                var elements = document.getElementsByClassName("ShoeQuan");
+                var names = {};
+                for (var i = 0; i < elements.length; i++) {
+                    names[elements[i].id] = elements[i].value;
+                }
+                var fullPrice = 0;
+                for (i in names){
+                    fullPrice += shoePrice[i] * names[i];
+
+                }
+                $('.fullPrice').text(fullPrice);
+
+                document.getElementById("id_shoes_quantity").value = JSON.stringify(names);
+
+            </script>
+
+
+            <div class="form-group">
+                 <input type="submit" value="Оформити замовлення" class="btn btn-default">
+            </div>
+    </form>
+    <script>
+        function maxLengthCheck(object) {
+             if (object.value.length > object.maxLength){
+                object.value = object.value.slice(0, object.maxLength);
+                if (object.value >>> object.max) {
+                    object.value = object.max;
+                }
+             }
+           // console.log(object.value);
+           // console.log(object.max);
+
         }
-    // console.log(names);
-     document.getElementById("id_shoes_quantity").value = JSON.stringify(names);
-    }
-
-
-</script>
-
- <input id="id_shoes_quantity" maxlength="550" name="shoes_quantity"  type="text" hidden/>
-<script>
-
-    var elements = document.getElementsByClassName("ShoeQuan");
-        var names = {};
-        for(var i=0; i<elements.length; i++) {
-            names[elements[i].id] = elements[i].value;
-        }
-
-       document.getElementById("id_shoes_quantity").value = JSON.stringify(names);
-
-</script>
-
-    <div style="display: none;">
-     <br />
-
-
-
-        {{ user_info.order_id.label }}
-        <select multiple="multiple" id="id_order_id" name="order_id">
-        {% for ord in basket %}
-              {% for shoe_detail in ord.shoes_id.shoeparameters_set.all %}
-
-            <option value="{{ ord.shoes_id.id }}" selected="selected"> {{ shoe_detail.name }}</option>
-        {% endfor %}
-        {% endfor %}
-        </select>
-    </div>
-
-        </ul>
-    <input type="submit" value="Form order" class="btn btn-default">
-</form>
-
+    </script>
 
 {% endblock %}
 

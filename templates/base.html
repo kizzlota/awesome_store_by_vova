@@ -1,17 +1,18 @@
 {% load staticfiles %}
+{% load humanize %}
 <!DOCTYPE html>
 <html>
 <head lang="en">
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title></title>
+    <title>Містер'с Вова Шоп</title>
 
     <link rel="stylesheet" href="{% static "css/bootstrap/css/bootstrap.min.css" %}" >
     <link rel="stylesheet" href="{% static "css/bootstrap/css/bootstrap-theme.min.css" %}">
     <link rel="stylesheet" href="{% static "css/menu_toolbar.css" %}">
     <link rel="stylesheet" href="{% static "css/css_menu.css" %}">
-
+ <script src="{% static "jquery-1.11.3.min.js" %}"></script>
 </head>
 <body>
 
@@ -38,7 +39,7 @@
                 <button type="submit" class="btn btn-default">find previous orders</button>
               </form>
 
-                <form action="/search/?=" method="GET" class="navbar-form navbar-left" >
+                  <form action="/search/?=" method="GET" class="navbar-form navbar-left" >
                 <div class="form-group">
 
                   <input id="searchbar" name="search"  class="form-control" placeholder="search">
@@ -46,25 +47,37 @@
                 <button type="submit" class="btn btn-default">search</button>
               </form>
 
+
               <ul class="nav navbar-nav navbar-right">
 
           <li class="dropdown" >
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Basket <img src="/static/img/Online_Shopping_cart_32.png">  <span class="badge">{{ basket|length }}</span></a>
-            <div class="dropdown-menu " style="width: 350px">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Basket <img src="/static/img/Online_Shopping_cart_32.png">  <span class="badge">{{ basket.0|length }}</span></a>
+            <div class="dropdown-menu " style="width: 400px">
 
         <div style="margin: 15px;" >
 
-   {% if basket %}
+   {% if basket.0 %}
 
-    {% for bas in basket %}
+    {% for bas in basket.0 %}
         {% for shoe_detail in bas.shoes_id.shoeparameters_set.all %}
-      <img src="/media/{{ shoe_detail.main_image }}" width="64px" class="img-rounded" />{{ bas.id }} {{ shoe_detail.model_of_shoe }} <a href="/busket_del/?id={{ bas.id }}" >X</a> <br>
+            <div class="row">
+            <div class="col-md-3">    <img src="/media/{{ shoe_detail.main_image }}" width="64px" class="img-rounded" />   </div>
+                <div class="col-md-3"> {{ shoe_detail.model_of_shoe }}</div>
+             <div class="col-md-3">   <span class="label label-success">{{ shoe_detail.price|intcomma }} грн.</span> </div>
+            <div class="col-md-1 col-md-offset-1">  <a href="/busket_del/?id={{ bas.id }}" >X</a> </div>
+
+            </div>
 
     {% endfor %}
     {% endfor %}
-<br>
-    <a href="/orders/new/" target="_blank" class="btn btn-primary btn-sm btn-success" role="button">Submit</a>
+       <br />
+  <div class="row">
+      <div class="col-md-6">
+       <a href="/orders/new/" target="_blank" class="btn btn-primary btn-sm btn-success" role="button">Оформити замовлення</a>
+    </div>
+            <div class="col-md-6"> <span class="label label-info">Сума: {{ basket.1|intcomma }} uah. </span> </div>
 
+    </div>
 
 {%  endif %}
 
@@ -76,12 +89,12 @@
 
                 <li><a href="/admin" target="_blank">Admin</a></li>
                          {% elif user.is_staff %}
-                             <li><a href="/profiles/manager" target="_blank">managing</a></li>
+               <li><a href="/profiles/manager" target="_blank">managing</a></li>
 
 
               {% endif %}
               {% endif %}
-                  <li><a href="/orders/new" target="_blank">Orders</a> </li>
+                   <li><a href="/profiles/manager" >managing</a></li>
                   <li><a href="/profiles/registration/">Registration</a></li>
 
                   {% if user.is_authenticated %}
@@ -121,15 +134,14 @@
 
 
 
-      {% block busket %}
 
-      {% endblock %}
 
 
       </div>
       <div class="col-md-8">
 
                   {% block content %}
+
                   {% endblock %}
       </div>
     </div>
@@ -138,7 +150,7 @@
 
 
 
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+ <script src="{% static "jquery-1.11.3.min.js" %}"></script>
  <script src="{% static "css/bootstrap/js/bootstrap.min.js" %}"></script>
 </body>
 </html>

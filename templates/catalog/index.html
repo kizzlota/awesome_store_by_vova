@@ -1,6 +1,4 @@
-﻿
-
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 
 
 
@@ -12,37 +10,35 @@
 
 
 
-
+{% load humanize %}
 {% block content %}
-    {% if alert %}
-        <div class="alert alert-warning alert-dismissible" role="alert">
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <strong>Thank you for order! </strong>
-                    <a href="/orders/new/" target="_blank" class="btn btn-primary btn-sm btn-success" role="button">оформити замовлення</a>
-                <br>
 
-    {% endif %}
 
 {% for shoe in shoes %}
     {%  for params in shoe.relation_to_shoes_params.all %}
 
-    <div class="col-sm-5 col-md-3">
+    <div class="col-sm-5 col-md-4">
 <div class="thumbnail">
      <a href="/shoe_ind/{{ shoe.id }}/{{ params.id }}"><img src="media/{{ params.main_image }}" alt="..."></a>
-      <div class="caption">
-        <h3>{{ shoe.name }}</h3>
-        <p>{{ shoe.decription }}</p>
-              <p><a href="#" class="btn btn-primary" role="button">{{ params.price }}</a>
+      <div class="caption" >
+       Модель: <h4 style="display: inline;"> {{ params.model_of_shoe }}</h4> <br>
+
+       <span class="label label-success">{{ params.price|intcomma }} грн.</span>
+
         {% for shoes_size_params in params.rel_to_size.all %}
 
 
-          {%  if shoes_size_params.quantity > 0 and not shoes_size_params.id in id_list and shoes_size_params.shoe_bool  %}
-                  <a href="/busket/?id={{ shoes_size_params.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
+          {%  if shoes_size_params.quantity > 0 and not shoes_size_params.id in basket.2 and shoes_size_params.shoe_bool  %}
 
-                {% elif shoe.id in id_list and  shoes_size_params.shoe_bool %}
-                    already in busket
-          {%  elif shoes_size_params.shoe_bool %}
-                   <a href="" class="btn btn-primary disabled" role="button">нема в наявності</a> </p>
+        <h4 style="display: inline-block;"> <a href="/busket/?id={{ shoes_size_params.id }}" >
+            <span class="label label-primary">Купи мене!</span></a></h4>
+
+          {% elif shoe.id in basket.2 and shoes_size_params.shoe_bool %}
+              <span class="label label-info">В корзині</span>
+
+          {% elif shoes_size_params.quantity == 0 and shoes_size_params.shoe_bool %}
+
+                   <span class="label label-warning">Розпродано</span>
           {% endif %}
        {% endfor %}
       </div>

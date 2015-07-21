@@ -10,13 +10,11 @@ def _generate_code():
     return hexlify(urandom(30))
 
 
-
 def create_signup_code(user):
     code = _generate_code()
     user_code = RegistrationCode(code=code, username=user)
     user_code.save()
     return code
-
 
 
 def send_email(user, prefix):
@@ -33,7 +31,6 @@ def send_email(user, prefix):
     ctxt = {
         'email': user.email,
         'username': user.username,
-
         'code': create_signup_code(user)
     }
     text_content = render_to_string(txt_file, ctxt)
