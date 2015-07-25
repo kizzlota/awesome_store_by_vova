@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+
+
+
+
+<form action="/orders/order_detail/?o={{ user_data }}" method="POST" class="form-horizontal" role="form">
+    {% csrf_token %}
+
+    <div class="form-group has-success">
+        <label class="control-label" for="inputSuccess1">{{ edit_form.user_name.label }}</label>
+        <input type="text" class="form-control" id="inputSuccess1" value="{{ edit_form.user_name.value }}" />
+    </div>
+
+     <div class="form-group has-success">
+        <label class="control-label" for="inputSuccess1">{{ edit_form.user_mail.label }}</label>
+        <input type="text" class="form-control" id="inputSuccess2" value="{{ edit_form.user_mail.value }}" />
+    </div>
+
+    <div class="form-group has-success">
+            <label class="control-label" for="inputSuccess1">{{ edit_form.user_phone.label }} </label>
+            <input type="text" class="form-control" id="inputSuccess3" value="{{ edit_form.user_phone.value }}" />
+        </div>
+
+     <div class="form-group has-success">
+                <label class="control-label" for="inputSuccess1">{{ edit_form.shoes_quantity.label }} </label>
+                <input type="text" class="form-control" id="inputSuccess4" value="{{ edit_form.shoes_quantity.value }}" />
+    </div>
+
+     <div class="form-group has-success">
+                    <label class="control-label" for="inputSuccess1">{{ edit_form.user_address.label }} </label>
+                    <input type="text" class="form-control" id="inputSuccess5" value="{{ edit_form.user_address.value }}" />
+    </div>
+
+
+        <p> {{ edit_form.status.label }} {{ edit_form.status }}</p>
+<br>
+
+      <button type="submit" class="btn btn-default">Submit</button>
+
+  </div>
+</form>
+{% endblock %}
+
+
+

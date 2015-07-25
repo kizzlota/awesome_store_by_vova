@@ -1,5 +1,6 @@
-
 {% extends 'base.html' %}
+{% load pagination_tags %}
+{% load humanize %}
 
 {% block leftList %}
     {%  include 'catalog/menu.html' %}
@@ -13,37 +14,66 @@
 
 
 {% block content %}
-{% for shoe in shoes_search %}
+{##}
+{##}
+{#{% block content %}#}
+{#{% for shoe in shoes_search %}#}
+{##}
+{#    <div class="col-sm-5 col-md-3">#}
+{#    <div class="thumbnail">#}
+{#         <a href="/shoe_ind/{{ shoe.id }}"><img src="/media/{{ shoe.main_image }}" alt="..."></a>#}
+{#          <div class="caption">#}
+{#            <h3>{{ shoe.name }}</h3>#}
+{#            <p>{{ shoe.decription }}</p>#}
+{#                  <p><a href="#" class="btn btn-primary" role="button">{{ shoe.price }}</a>#}
+{#                {%  if shoe.quantity > 0 and not shoe.id in id_list %}#}
+{#                      <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>#}
+{#                    {% elif shoe.id in id_list %}#}
+{#                        already in busket#}
+{#              {%  else %}#}
+{#                       <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">нема в наявності</a> </p>#}
+{#              {% endif %}#}
+{#          </div>#}
+{#     </div>#}
+{#     </div>#}
+{##}
+{#{% endfor %}#}
+{##}
 
-    <div class="col-sm-5 col-md-3">
-    <div class="thumbnail">
-         <a href="/shoe_ind/{{ shoe.id }}"><img src="/media/{{ shoe.main_image }}" alt="..."></a>
-          <div class="caption">
-            <h3>{{ shoe.name }}</h3>
-            <p>{{ shoe.decription }}</p>
-                  <p><a href="#" class="btn btn-primary" role="button">{{ shoe.price }}</a>
-                {%  if shoe.quantity > 0 and not shoe.id in id_list %}
-                      <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary" role="button">Buy me</a> </p>
-                    {% elif shoe.id in id_list %}
-                        already in busket
-              {%  else %}
-                       <a href="/busket/?id={{ shoe.id }}" class="btn btn-primary disabled" role="button">нема в наявності</a> </p>
-              {% endif %}
-          </div>
-     </div>
+
+
+
+    {% for shoe in shoes_search %}
+
+
+     <div class="col-sm-5 col-md-4">
+         <div class="thumbnail">
+         {% for item in shoe.shoes_set.all %}
+             <a href="/shoe_ind/{{ item.id }}/{{ shoe.id }}"><img src="/media/{{ shoe.main_image }}" alt="..."></a>
+         {% endfor %}
+             <div class="caption" >
+
+                 Модель: <h4 style="display: inline;"> {{ shoe.model_of_shoe }}</h4> <br>
+                 <span class="label label-success">{{ shoe.price|intcomma }} грн.</span>
+
+                 {% for shoes_size_params in params.rel_to_size.all %}
+                     {%  if shoes_size_params.quantity > 0 and not shoes_size_params.id in basket.2 and shoes_size_params.shoe_bool  %}
+
+                        <h4 style="display: inline-block;"> <a href="/busket/?id={{ shoes_size_params.id }}" >
+                        <span class="label label-primary">Купи мене!</span></a></h4>
+
+                     {% elif shoes_size_params.id in basket.2 and shoes_size_params.shoe_bool %}
+                         <span class="label label-info">В корзині</span>
+
+                     {% elif shoes_size_params.quantity == 0 and shoes_size_params.shoe_bool %}
+                         <span class="label label-warning">Розпродано</span>
+                     {% endif %}
+                 {% endfor %}
+            </div>
+         </div>
      </div>
 
-{% endfor %}
+{%  endfor %}
+
+
 {% endblock %}
-{##}
-{#{%  block content %}#}
-{#    {%  if not shoes_search %}#}
-{#        <p>Nothing Find</p>#}
-{#    {% else %}#}
-{#    {% for finded in shoes_search %}#}
-{#        <p> <img src="/media/{{ finded.main_image }}" width="124px"></p>#}
-{#        <p>name:{{ finded.name }}</p>#}
-{#    {% endfor %}#}
-{#    {% endif %}#}
-{##}
-{#{%  endblock %}#}

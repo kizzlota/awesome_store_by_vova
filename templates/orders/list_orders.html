@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load humanize %}
-
+{% load str_to_dic %}
 {% block content %}
 
   <h2>Orders List</h2>
@@ -36,7 +36,7 @@
         <td> {{ order.user_phone }}</td>
         <td> {{ order.user_adress }}</td>
         <td> {{ order.order_id }}</td>
-          <td>{{ order.price }}</td>
+          <td>{{ order.total|intcomma }} uah</td>
           <td>{{ order.date }}</td>
           <td>{{ order.status }}</td>
 
@@ -50,10 +50,11 @@
                 <thead>
       <tr>
         <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
+        <th>Price</th>
         <th>Model</th>
-        <th>Quantity</th>
+        <th>Size</th>
+          <th>Quantity</th>
+        <th>Image</th>
 
       </tr>
     </thead>
@@ -62,11 +63,20 @@
 
 
             {% for param in ii.shoeparameters_set.all %}
-        <td><a href="/orders/order_detail/?o={ order.id }">{{ ii.id }} </a></td>
+                {% if user.is_staff %}
+        <td><a href="/orders/order_detail/?o={{ order.id }}">{{ ii.id }} </a></td>
+                {% else %}
+                 <td>{{ ii.id }}</td>
+                {% endif %}
         <td>{{ param.price }} </td>
-        <td> { order.user_mail }</td>
         <td> {{ param.model_of_shoe }}</td>
-        <td> { order.shoes_quantity }</td>
+        <td> {{ ii.size }}</td>
+                {% with order.shoes_quantity|str_to_dict as dict %}
+       {%  for key, value in dict.iteritems %}
+
+        {% if ii.id|add:'0' == key|add:'0' %} <td>{{ value }} штук.</td>
+           {%  endif %}
+           {%  endfor %}{% endwith %}
         <td> <img src="/media/{{ param.main_image }}" width="96px"> </td>
 
 

@@ -1,4 +1,7 @@
 {% extends 'base.html' %}
+{% load humanize %}
+{% load str_to_dic %}
+
 {%  include '' %}
 
 {% block leftList %}
@@ -55,30 +58,140 @@ function showSpoiler(obj)
     <!--
     ---------------------------------------------------------------------------------------------------------------
     -->
-    <div class="list-group" style="border:thin">
-         <ul class="list-group">
-        {{ total_sum.total }}
-    {%  for ord in users_list_orders %}
+{#    <div class="list-group" style="border:thin">#}
+{#         <ul class="list-group">#}
+{#        {{ total_sum.total }}#}
+{#    {%  for ord in users_list_orders %}#}
+{##}
+{#           <li class="list-group-item list-group-item-success"> <span style="margin: 0 10px 0 0; ">#}
+{#               <b>покупець:</b> {{ ord.user_name }}</span>#}
+{##}
+{#               <a href="#" onclick="showSpoiler(this);"> <b>номер замовлення:</b> {{ ord.id }}</a>#}
+{##}
+{#               <span style="border: thin"> <b>сума замовлення:</b> {{ ord.total }}</span></li>#}
+{##}
+{#           <li class="list-group-item list-group-item-info">{{ ord.user_phone }} </li>#}
+{#         <div class="inner" >#}
+{#      {% for new_ord in ord.order_id.all %}#}
+{#          <li class="list-group-item list-group-item-info">модель: {{ new_ord.name }} ціна: {{ new_ord.price }} </li>#}
+{#       <li class="list-group-item list-group-item-warning"> <img src="/media/{{ new_ord.main_image }}" width="120px" ></li>#}
+{#          {% endfor %}#}
+{#  </div>#}
+{#        <br>#}
+{#    {%  endfor %}#}
+{##}
+{#        </ul>#}
+{#    </div>#}
+{#   </div>#}
+{#    <p>{{ all_price }}</p>#}
+{##}
+{##}
+{##}
 
-           <li class="list-group-item list-group-item-success"> <span style="margin: 0 10px 0 0; ">
-               <b>покупець:</b> {{ ord.user_name }}</span>
 
-               <a href="#" onclick="showSpoiler(this);"> <b>номер замовлення:</b> {{ ord.id }}</a>
+  <h2>Orders {{ user }}</h2>
 
-               <span style="border: thin"> <b>сума замовлення:</b> {{ ord.total }}</span></li>
 
-           <li class="list-group-item list-group-item-info">{{ ord.user_phone }} </li>
-         <div class="inner" >
-      {% for new_ord in ord.order_id.all %}
-          <li class="list-group-item list-group-item-info">модель: {{ new_ord.name }} ціна: {{ new_ord.price }} </li>
-       <li class="list-group-item list-group-item-warning"> <img src="/media/{{ new_ord.main_image }}" width="120px" ></li>
-          {% endfor %}
-  </div>
-        <br>
-    {%  endfor %}
 
-        </ul>
+
+  <table class="table table-hover">
+    <thead>
+      <tr>
+
+        <th></th>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Adress</th>
+        <th>Order details</th>
+        <th>Total Sum</th>
+          <th>Date</th>
+
+      </tr>
+    </thead>
+    <tbody>
+         {% for order in users_list_orders %}
+
+      <tr >
+         <td data-toggle="collapse" data-target="#demo_{{ order.id }}" class="accordion-toggle"><span class="glyphicon glyphicon-eye-open"  data-toggle="tooltip" data-placement="top" title="click to see order details"></span></td>
+       {%  if user.is_staff %}
+        <td > <a href="/orders/order_detail/?o={{ order.id }}"  data-toggle="tooltip" data-placement="top" title="Click to edit order!">{{ order.id }}</a></td>
+        {% else %}
+           <td >{{ order.id }}</td>
+          {% endif %}
+        <td>{{ order.user_name }}</td>
+        <td> {{ order.user_mail }}</td>
+        <td> {{ order.user_phone }}</td>
+        <td> {{ order.user_adress }}</td>
+        <td> {{ order.order_id }}</td>
+          <td>{{ order.total|intcomma }} uah</td>
+          <td>{{ order.date }}</td>
+
+
+
+      </tr>
+             <tr >
+            <td colspan="9" class="hiddenRow"><div class="accordian-body collapse" id="demo_{{ order.id }}">
+
+
+                 <table class="table table-hover">
+                <thead>
+      <tr>
+        <th>ID</th>
+        <th>Price</th>
+        <th>Model</th>
+        <th>Size</th>
+        <th>Quantity</th>
+        <th>Image</th>
+
+      </tr>
+    </thead>
+
+  {%  for ii in order.shoe_size_id %}
+                <tr>
+
+
+            {% for param in ii.shoeparameters_set.all %}
+                {% if user.is_staff %}
+        <td><a href="/orders/order_detail/?o={{ order.id }}" data-toggle="tooltip" data-placement="top" title="edit">{{ ii.id }} </a></td>
+                {% else %}
+                <td>{{ ii.id }}</td>
+                {% endif %}
+        <td>{{ param.price }} </td>
+        <td> {{ param.model_of_shoe }}</td>
+        <td> {{ ii.size }}</td>
+                {% with order.shoes_quantity|str_to_dict as dict %}
+       {%  for key, value in dict.iteritems %}
+
+        {% if ii.id|add:'0' == key|add:'0' %} <td>{{ value }} штук.</td>
+           {%  endif %}
+           {%  endfor %}{% endwith %}
+        <td> <img src="/media/{{ param.main_image }}" width="96px"> </td>
+
+
+      </tr>
+        {% endfor %}
+        {% endfor %}
+    </table>
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
+
     </div>
-   </div>
-    <p>{{ all_price }}</p>
+    </td>
+    </tr>
+
+    {% endfor %}
+
+
+  </tbody>
+  </table>
+    <script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+});
+</script>
 {%  endblock %}

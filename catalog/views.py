@@ -35,6 +35,7 @@ def basket_info(request):
     for ordering in basket:
         for price in ordering.shoes_id.shoeparameters_set.all():
             total_sum += price.price
+    print id_list
     return basket, total_sum, id_list
 
 
@@ -120,7 +121,16 @@ def simple_search(request):
     list_category = Category.objects.all()
     if request.method == 'GET':
         data = request.GET.get('search')
-        shoes_search = ShoeParameters.objects.filter(Q(model_of_shoe=data) |
-            Q(material__startswith=data) | Q(price__startswith=data) | Q(shoes__category_name__name=data)).distinct()
+        shoes_search = ShoeParameters.objects.filter(Q(model_of_shoe=data) | Q(main_image__startswith=data) |
+                                                     Q(shoes__id__startswith=data) | Q(material__startswith=data) |
+            Q(price__startswith=data) | Q(shoes__category_name__name=data)).distinct()
     return render(request, 'catalog/search_result.html', {'shoes_search': shoes_search, 'category': list_category,
                                                         'basket': true_busket(request)})
+
+
+
+def simple_filter(request):
+    filter_var_from_req = request.GET.get('f')
+    if filter_var_from_req == 'price':
+	    get_price = ShoeParameters.objects.all().order_by('price')
+	    return

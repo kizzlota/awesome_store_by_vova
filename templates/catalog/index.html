@@ -1,9 +1,20 @@
 ﻿{% extends 'base.html' %}
-
+{% load pagination_tags %}
 
 
 {% block leftList %}
  {%  include 'catalog/menu.html' %}
+
+
+    <div class="dropdown" >
+        <button class="btn btn-primary dropdown-toggle glyphicon glyphicon-filter" type="button" data-toggle="dropdown">filters
+        <span class="caret"></span></button>
+        <ul class="dropdown-menu">
+            <li><a href="/filter/?f='price'">filter_by_price</a></li>
+            <li><a href="/filter/?f='date'">filter_by_date</a></li>
+            <li><a href="/filter/?f='color'">filter_by_color</a></li>
+        </ul>
+    </div>
 
 {% endblock %}
 
@@ -13,40 +24,41 @@
 {% load humanize %}
 {% block content %}
 
+{% autopaginate shoes 3 %}
 
-{% for shoe in shoes %}
+    {% for shoe in shoes %}
     {%  for params in shoe.relation_to_shoes_params.all %}
 
-    <div class="col-sm-5 col-md-4">
-<div class="thumbnail">
-     <a href="/shoe_ind/{{ shoe.id }}/{{ params.id }}"><img src="media/{{ params.main_image }}" alt="..."></a>
-      <div class="caption" >
-       Модель: <h4 style="display: inline;"> {{ params.model_of_shoe }}</h4> <br>
+     <div class="col-sm-5 col-md-4">
+         <div class="thumbnail">
+             <a href="/shoe_ind/{{ shoe.id }}/{{ params.id }}"><img src="media/{{ params.main_image }}" alt="..."></a>
+         <div class="caption" >
+                 Модель: <h4 style="display: inline;"> {{ params.model_of_shoe }}</h4> <br>
+                 <span class="label label-success">{{ params.price|intcomma }} грн.</span>
 
-       <span class="label label-success">{{ params.price|intcomma }} грн.</span>
+                 {% for shoes_size_params in params.rel_to_size.all %}
+                     {%  if shoes_size_params.quantity > 0 and not shoes_size_params.id in basket.2 and shoes_size_params.shoe_bool  %}
 
-        {% for shoes_size_params in params.rel_to_size.all %}
+                        <h4 style="display: inline-block;"> <a href="/busket/?id={{ shoes_size_params.id }}" >
+                        <span class="label label-primary">Купи мене!</span></a></h4>
 
+                     {% elif shoes_size_params.id in basket.2 and shoes_size_params.shoe_bool %}
+                         <span class="label label-info">В корзині</span>
 
-          {%  if shoes_size_params.quantity > 0 and not shoes_size_params.id in basket.2 and shoes_size_params.shoe_bool  %}
-
-        <h4 style="display: inline-block;"> <a href="/busket/?id={{ shoes_size_params.id }}" >
-            <span class="label label-primary">Купи мене!</span></a></h4>
-
-          {% elif shoe.id in basket.2 and shoes_size_params.shoe_bool %}
-              <span class="label label-info">В корзині</span>
-
-          {% elif shoes_size_params.quantity == 0 and shoes_size_params.shoe_bool %}
-
-                   <span class="label label-warning">Розпродано</span>
-          {% endif %}
-       {% endfor %}
-      </div>
- </div>
- </div>
+                     {% elif shoes_size_params.quantity == 0 and shoes_size_params.shoe_bool %}
+                         <span class="label label-warning">Розпродано</span>
+                     {% endif %}
+                 {% endfor %}
+            </div>
+         </div>
+     </div>
 
 {%  endfor %}
 {% endfor %}
+    {% paginate %}
+
+
+
 {% endblock %}
 
 

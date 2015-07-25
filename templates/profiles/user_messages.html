@@ -1,0 +1,50 @@
+
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+
+    <div class="col-xs-10 col-sm-5">
+
+{%  if active_success %}
+   <div class="alert alert-success alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+  <strong>Nice</strong> <h3>Дякуємо за реєстрацію. через момент ви будете пренаправленні на головнеу сторінку</h3>
+
+</div>
+    <script>var delay = 5000; //Your delay in milliseconds
+    var URL = '/';
+setTimeout(function(){ window.location = URL; }, delay);</script>
+    {% endif %}
+
+
+{%  if not_active_success %}
+   <div class="alert alert-warning alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+ <h3>Юху, ви вже активували свій акаунт. Покупки чекають вас. </h3>
+
+</div>
+    <script>var delay = 5000; //Your delay in milliseconds
+    var URL = '/';
+setTimeout(function(){ window.location = URL; }, delay);</script>
+    {% endif %}
+
+{%  if active_error %}
+   <div class="alert alert-danger alert-dismissible" role="alert">
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+ <h3>Щось пішло не так. Ваш активаційний код не є дійсним. Жаль =( </h3>
+
+</div>
+    <script>var delay = 5000; //Your delay in milliseconds
+    var URL = '/';
+setTimeout(function(){ window.location = URL; }, delay);</script>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}
+
+
+

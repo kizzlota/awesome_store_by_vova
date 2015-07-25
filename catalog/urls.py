@@ -15,6 +15,7 @@ urlpatterns = [
 	# url(r'^login/', 'catalog.views.user_login', name='user_login'),
 	# url(r'^logout/$', 'catalog.views.user_logout', name='logout'),
 	url(r'^search/', 'catalog.views.simple_search', name='simple_search'),
+	url(r'^filter/', 'catalog.views.simple_filter', name='simple_filter'),
 
 
 ]

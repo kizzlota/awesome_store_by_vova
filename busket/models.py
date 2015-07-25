@@ -57,9 +57,15 @@ class OrderModel(models.Model):
             id_in_shoes.quantity -= int(j)
             id_in_shoes.save()
 
-            # @receiver(post_save, sender=OrderModel)
-            # def clear_busket_after(instance, **kwargs):
-            # profile_hash = BasketModel.objects.filter()
+    def total(self):
+        dic_quantity = self.shoes_quantity
+        dic_quantity = json.loads(dic_quantity)
+        total_sum = 0
+        for i, j in dic_quantity.iteritems():
+            id_in_shoes = ShoeSizeParams.objects.get(id=i)
+            for item in id_in_shoes.shoeparameters_set.all():
+                total_sum += item.price * int(j)
+        return total_sum
 
     def shoe_size_id(self):
         dic_quantity_true = json.loads(self.shoes_quantity)

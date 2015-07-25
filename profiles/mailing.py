@@ -4,38 +4,68 @@ from django.core.mail.message import EmailMultiAlternatives
 from binascii import hexlify
 from os import urandom
 from .models import RegistrationCode
+from busket.models import OrderModel
+
+
+def order_success():
+	order = OrderModel.objects.all()
+	return order
 
 
 def _generate_code():
-    return hexlify(urandom(30))
+	return hexlify(urandom(30))
 
 
 def create_signup_code(user):
-    code = _generate_code()
-    user_code = RegistrationCode(code=code, username=user)
-    user_code.save()
-    return code
+	code = _generate_code()
+	user_code = RegistrationCode(code=code, username=user)
+	user_code.save()
+	return code
 
 
 def send_email(user, prefix):
-    subject_file = 'mail/%s_subject.txt' % prefix
+	subject_file = 'mail/%s_subject.txt' % prefix
 
-    txt_file = 'mail/%s.txt' % prefix
-    html_file = 'mail/%s.html' % prefix
+	txt_file = 'mail/%s.txt' % prefix
+	html_file = 'mail/%s.html' % prefix
 
-    subject = render_to_string(subject_file).strip()
-    from_email = settings.DEFAULT_EMAIL_FROM
-    to = user.email
-    bcc_email = settings.DEFAULT_EMAIL_BCC
-    # Make some context available
-    ctxt = {
-        'email': user.email,
-        'username': user.username,
-        'code': create_signup_code(user)
-    }
-    text_content = render_to_string(txt_file, ctxt)
-    html_content = render_to_string(html_file, ctxt)
-    msg = EmailMultiAlternatives(subject, text_content, from_email, [to],
-                                 bcc=[bcc_email])
-    msg.attach_alternative(html_content, 'text/html')
-    msg.send()
+	subject = render_to_string(subject_file).strip()
+	from_email = settings.DEFAULT_EMAIL_FROM
+	to = user.email
+	bcc_email = settings.DEFAULT_EMAIL_BCC
+	# Make some context available
+	ctxt = {
+		'email': user.email,
+		'username': user.username,
+		'code': create_signup_code(user),
+	}
+	text_content = render_to_string(txt_file, ctxt)
+	html_content = render_to_string(html_file, ctxt)
+	msg = EmailMultiAlternatives(subject, text_content, from_email, [to],
+	                             bcc=[bcc_email])
+	msg.attach_alternative(html_content, 'text/html')
+	msg.send()
+
+
+def send_order_email(order_id, prefix):
+	subject_file = 'mail/%s_subject.txt' % prefix
+	txt_file = 'mail/%s.txt' % prefix
+	html_file = 'mail/%s.html' % prefix
+
+	order = OrderModel.objects.get(id=order_id)
+
+	subject = render_to_string(subject_file).strip()
+	from_email = settings.DEFAULT_EMAIL_FROM
+	to = order.user_mail
+	bcc_email = settings.DEFAULT_EMAIL_BCC
+	ctxt = {
+		'email': order.user_mail,
+		'username': order.user_name,
+		'order': order,
+	}
+	text_content = render_to_string(txt_file, ctxt)
+	html_content = render_to_string(html_file, ctxt)
+	msg = EmailMultiAlternatives(subject, text_content, from_email, [to],
+	                             bcc=[bcc_email])
+	msg.attach_alternative(html_content, 'text/html')
+	msg.send()
