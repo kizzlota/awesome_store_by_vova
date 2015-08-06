@@ -11,6 +11,7 @@ from profiles.mailing import send_email
 from busket.models import OrderModel
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
+from django.forms.models import modelformset_factory
 
 from catalog.views import basket_info
 
@@ -140,49 +141,60 @@ def list_orders(request):
 
 
 def manager(request):
-	"""method interact user as manager and renders manager's page """
-	user_identity = request.user.username
-	user_filter = request.user.is_staff
+	ImageFormSet = modelformset_factory(ShoesPhotos, fields=('images',), extra=5)
 	if request.method == 'POST':
-		pictures_list = []
-		photo_form_set = ShoesPhotosForm(request.POST)
-		if photo_form_set.is_valid():
-			data = photo_form_set.save(commit=False)
-			data.save()
-			pictures_list.append(str(data.id))
-		print pictures_list
-
-		shoe_param_set = ShoeSizeParamsForm(request.POST)
-		if shoe_param_set.is_valid():
-			data1 = shoe_param_set.save(commit=False)
-			data1.save()
-
-		true_post = dict(request.POST)
-		request.POST = request.POST.copy().dict()
-		request.POST['relation_to_shoes_photos'] = pictures_list
-		request.POST['rel_to_size'] = [str(data1.id)]
-
-		shoe_main_param = ShoeParametersForm(request.POST)
-		if shoe_main_param.is_valid():
-			data2 = shoe_main_param.save(commit=False)
-			data2.save()
-			shoe_main_param.save_m2m()
-
-		request.POST['relation_to_shoes_params'] = [str(data2.id)]
-		request.POST['category_name'] = true_post['category_name']
-
+		form_pictures = ImageFormSet(request.POST, request.FILES)
+		shoes_size_form = ShoeSizeParamsForm(request.POST)
+		shoe_main_param = ShoeParametersForm(request.POST, request.FILES)
 		shoe_main = ShoesForm(request.POST)
-		if shoe_main.is_valid():
-			data3 = shoe_main.save(commit=False)
-			data3.save()
-			shoe_main.save_m2m()
+
+		if form_pictures.is_valid() and shoes_size_form.is_valid() \
+				and shoe_main_param.is_valid() and shoe_main.is_valid():
+			pictures_list = []
+
+			# print request.FILES
+			# print request.POST
+
+			if form_pictures.is_valid():
+
+				data = form_pictures.save()
+				for i in data:
+					pictures_list.append(str(i))
+
+			print pictures_list
+
+			if shoes_size_form.is_valid():
+				data1 = shoes_size_form.save(commit=False)
+				data1.save()
+
+			# true_post = dict(request.POST)
+			# request.POST = request.POST.copy().dict()
+			# request.POST['relation_to_shoes_photos'] = pictures_list
+			# request.POST['rel_to_size'] = [str(data1.id)]
+
+			shoe_main_param = ShoeParametersForm(request.POST, request.FILES)
+			if shoe_main_param.is_valid():
+				data2 = shoe_main_param.save(commit=False)
+				data2.save()
+				data2.relation_to_shoes_photos = pictures_list
+				data2.rel_to_size = [str(data1.id)]
+				shoe_main_param.save_m2m()
+
+			if shoe_main.is_valid():
+				# print "why"
+				data3 = shoe_main.save(commit=False)
+				data3.save()
+				data3.relation_to_shoes_params = [str(data2.id)]
+				shoe_main.save_m2m()
+
+			return HttpResponseRedirect('/shoe_ind/{0}/{1}/'.format(data3.id, data2.id))
 
 	else:
-		photo_form_set = ShoesPhotosForm()  # pictures
-		shoe_param_set = ShoeSizeParamsForm()
+		form_pictures = ImageFormSet(queryset=ShoesPhotos.objects.none())  # pictures
+		shoes_size_form = ShoeSizeParamsForm()
 		shoe_main_param = ShoeParametersForm()
 		shoe_main = ShoesForm()
 
 	return render(request, 'profiles/managing.html',
-	              {'photo_form_set': photo_form_set, 'shoe_param_set': shoe_param_set,
+	              {'form_pictures': form_pictures, 'shoes_size_form': shoes_size_form,
 	               'shoe_main_param': shoe_main_param, 'shoe_main': shoe_main})

@@ -7,7 +7,7 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('catalog', '__first__'),
+        ('catalog', '0001_initial'),
     ]
 
     operations = [
@@ -30,7 +30,8 @@ class Migration(migrations.Migration):
                 ('user_address', models.TextField(max_length=350)),
                 ('user_mail', models.EmailField(max_length=100)),
                 ('shoes_quantity', models.CharField(max_length=550, null=True, blank=True)),
-                ('order_id', models.ManyToManyField(to='catalog.ShoeParameters')),
+                ('date', models.DateTimeField(auto_now_add=True, null=True)),
+                ('status', models.CharField(default='\u043e\u0431\u0440\u043e\u0431\u043a\u0430', max_length=20, choices=[('\u043e\u0431\u0440\u043e\u0431\u043a\u0430', 'processing'), ('\u0432\u0456\u0434\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e', 'sent'), ('\u0434\u043e\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u043e', 'delivered')])),
             ],
         ),
     ]

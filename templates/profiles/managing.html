@@ -4,27 +4,423 @@
 {% block content %}
     <p>{{ user_identity }}</p>
 
-    {%  if photo_form_set %}
 
-<form action="/profiles/manager/" method="POST" class="form-horizontal" role="form">
+
+<form enctype="multipart/form-data" action="/profiles/manager/" method="POST" class="form-horizontal" role="form">
     {% csrf_token %}
-    {{ shoe_main.as_p }}
+    <div class="row">
+        {{ shoe_main.non_field_errors }}
+        <div class="form-group col-md-3">
+            <label for="id_name">{{ shoe_main.name.label }}</label>
+            <input type="text" class="form-control" id="id_name" maxlength="200" name="name"
+                   placeholder="Назва моделі взуття">
+
+            {% if shoe_main.name.errors %}
+                {% for error in shoe_main.name.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_manufacturer">{{ shoe_main.manufacturer.label }}</label>
+            <input type="text" class="form-control" id="id_manufacturer" maxlength="200" name="manufacturer"
+                   placeholder="Виробник">
+
+            {% if shoe_main.manufacturer.errors %}
+                {% for error in shoe_main.manufacturer.errorss %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_model_of_shoe">{{ shoe_main_param.model_of_shoe.label }}</label>
+            <input type="text" class="form-control" id="id_model_of_shoe" maxlength="200" name="model_of_shoe"
+                   placeholder="Номер моделі">
+
+            {% if shoe_main_param.model_of_shoe.errors %}
+                {% for error in shoe_main_param.model_of_shoe.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-md-3">
+
+            <label for="id_name">{{ shoe_main.category_name.label }}</label>
+            {{ shoe_main.category_name }}
+
+            {% if shoe_main.category_name.errors %}
+                {% for error in shoe_main.category_name.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-6 col-md-offset-1">
+
+            <label for="id_description">{{ shoe_main.description.label }}</label>
+            <input type="text" class="form-control" id="id_description" maxlength="200" name="description"
+                   placeholder="Загальний опис">
+
+            {% if shoe_main.description.errors %}
+                {% for error in shoe_main.description.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+
+    </div>
+    <div class="row">
+        <div class="form-group col-md-3">
+
+            <label for="id_date_manufac">{{ shoe_main_param.date_manufac.label }}</label>
+            <input type="date" class="form-control" id="id_date_manufac" maxlength="200" name="date_manufac"
+                   placeholder="Назва моделі взуття">
+
+            {% if shoe_main_param.date_manufac.errors %}
+                {% for error in shoe_main_param.date_manufac.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_material">{{ shoe_main_param.material.label }}</label>
+            <input type="text" class="form-control" id="id_material" maxlength="200" name="material"
+                   placeholder="Виробник">
+
+            {% if shoe_main_param.material.errors %}
+                {% for error in shoe_main_param.material.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_vkladka">{{ shoe_main_param.vkladka.label }}</label>
+            <input type="text" class="form-control" id="id_vkladka" maxlength="200" name="vkladka"
+                   placeholder="Номер моделі">
+             {{ shoe_main_param.vkladka.errors }}
+            {% if shoe_main_param.material.errors %}
+                {% for error in shoe_main_param.material.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
     <br>
-    {{ shoe_main_param.as_p }}
-    <br>
-    {{ shoe_param_set.as_p }}
+    <div class="row">
+        <div class="form-group col-md-3">
+
+            <label for="id_color">{{ shoe_main_param.color.label }}</label>
+            <input type="text" class="form-control" id="id_color" maxlength="200" name="color"
+                   placeholder="Колір взуття">
+            {% if shoe_main_param.color.errors %}
+                {% for error in shoe_main_param.color.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_price">{{ shoe_main_param.price.label }}</label>
+            <input type="text" class="form-control" id="id_price" maxlength="200" name="price"
+                   placeholder="Цінна">
+            {% if shoe_main_param.price.errors  %}
+                {% for error in shoe_main_param.color.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_new_price">{{ shoe_main_param.new_price.label }}</label>
+            <input type="text" class="form-control" id="id_new_price" maxlength="200" name="new_price"
+                   placeholder="Можлива нова ціна">
+            {% if shoe_main_param.vkladka.errors %}
+                {% for error in shoe_main_param.vkladka.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
 
     <br>
+        <div class="row">
+        <div class="form-group col-md-3">
 
-    {{ photo_form_set.as_p }}
+            <label for="id_size">{{ shoes_size_form.size.label }}</label>
+            <input type="text" class="form-control" id="id_size" maxlength="200" name="size"
+                   placeholder="size">
+            {% if shoes_size_form.size.errors %}
+                {% for error in shoes_size_form.size.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+            {{ shoes_size_form.height_shoe.errors }}
+            <label for="id_height_shoe">{{ shoes_size_form.height_shoe.label }}</label>
+            <input type="text" class="form-control" id="id_height_shoe" maxlength="200" name="height_shoe"
+                   placeholder="height_shoe">
+        </div>
+         <div class=" col-md-3 col-md-offset-1">
+            {{ shoes_size_form.height_heel.errors }}
+            <label for="id_height_heel">{{ shoes_size_form.height_heel.label }}</label>
+            <input type="text" class="form-control" id="id_height_heel" maxlength="200" name="height_heel"
+                   placeholder="height_heel">
+        </div>
+        </div>
+        <div class="row">
+        <div class="form-group col-md-3 ">
+            {{ shoes_size_form.len_of_stelka.errors }}
+            <label for="id_len_of_stelka">{{ shoes_size_form.len_of_stelka.label }}</label>
+            <input type="text" class="form-control" id="id_len_of_stelka" maxlength="200" name="len_of_stelka"
+                   placeholder="len_of_stelka">
+        </div>
+        <div class=" col-md-3 col-md-offset-1">
+            {{ shoes_size_form.len_of_feet.errors }}
+            <label for="id_len_of_feet">{{ shoes_size_form.len_of_feet.label }}</label>
+            <input type="text" class="form-control" id="id_len_of_feet" maxlength="200" name="len_of_feet"
+                   placeholder="len_of_feet">
+        </div>
+        <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_quantity">{{ shoes_size_form.quantity.label }}</label>
+            <input type="text" class="form-control" id="id_size" maxlength="200" name="quantity"
+                   placeholder="Наявна кількість">
+            {% if shoes_size_form.quantity.errors %}
+                {% for error in shoes_size_form.quantity.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <br>
+    <div class="row">
+        <div class="form-group col-md-3">
+
+            {% if shoe_main_param.main_image.errors %}
+                {% for error in shoe_main_param.main_image.errors %}
+                   <strong><p style="font-size: small"> {{ error|escape }} </p></strong>
+                {% endfor %}
+            {% endif %}
+            <label for="id_color">{{ shoe_main_param.main_image.label }}</label>
+
+                <script>
+                    function readURL(input) {
+
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+
+                            reader.onload = function (e) {
+                                $('#upload-file-info').attr('src', e.target.result);
+                            };
+
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+
+
+                </script>
+                    <span class="btn btn-default btn-file">
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' id="id_main_image" name="main_image" size="40" onchange='readURL(this);'>
+                    </span>
+                    &nbsp;
+
+
+        </div>
+         <div class="col-md-3 col-md-offset-1">
+            <img id="upload-file-info" src="" width="180px" >
+         </div>
+     <div class="col-md-3 col-md-offset-1">
+
+            <label for="id_quantity">перша модель взуття</label>
+                {{ shoes_size_form.shoe_bool }}
+        </div>
+    </div>
 
     <br>
 
-      <button type="submit" class="btn btn-default">Submit</button>
+        <div class="row"><label for="id_color">Additional photos</label>
+        <input id="id_form-TOTAL_FORMS" name="form-TOTAL_FORMS" type="hidden" value="6" />
+        <input id="id_form-INITIAL_FORMS" name="form-INITIAL_FORMS" type="hidden" value="0" />
+        <input id="id_form-MIN_NUM_FORMS" name="form-MIN_NUM_FORMS" type="hidden" value="0" />
+        <input id="id_form-MAX_NUM_FORMS" name="form-MAX_NUM_FORMS" type="hidden" value="1000" />
+        </div> <br>
 
-  </div>
+        <div class="row">
+            <div class="form-group col-md-2">
+
+                <script>
+                    function readURL0(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('#id_form-0-images-show').attr('src', e.target.result);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                    <span class="btn btn-default btn-file">
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' id="id_form-0-images" name="form-0-images" size="40" onchange='readURL0(this);'>
+                    </span>
+
+
+
+             </div>
+         <div class="col-md-3 col-md-offset-1">
+            <img id="id_form-0-images-show" src="" width="180px" >
+         </div>
+<!-- new -->
+          <div class="form-group col-md-2 col-md-offset-1">
+
+                <script>
+                    function readURL1(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('#id_form-1-images-show').attr('src', e.target.result);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                    <span class="btn btn-default btn-file">
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' id="id_form-1-images" name="form-1-images" size="40" onchange='readURL1(this);'>
+                    </span>
+                    &nbsp;
+
+
+        </div>
+         <div class="col-md-3 col-md-offset-1">
+            <img id="id_form-1-images-show" src="" width="180px" >
+         </div>
+         </div>
+
+
+
+        <div class="row">
+            <div class="form-group col-md-2">
+
+                <script>
+                    function readURL2(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('#id_form-2-images-show').attr('src', e.target.result);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                    <span class="btn btn-default btn-file">
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' id="id_form-2-images" name="form-2-images" size="40" onchange='readURL2(this);'>
+                    </span>
+                    &nbsp;
+
+
+        </div>
+         <div class="col-md-3 col-md-offset-1">
+            <img id="id_form-2-images-show" src="" width="180px" >
+         </div>
+<!-- new -->
+          <div class="form-group col-md-2 col-md-offset-1">
+
+                <script>
+                    function readURL3(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('#id_form-3-images-show').attr('src', e.target.result);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                    <span class="btn btn-default btn-file">
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' id="id_form-3-images" name="form-3-images" size="40" onchange='readURL3(this);'>
+                    </span>
+                    &nbsp;
+
+
+        </div>
+         <div class="col-md-3 col-md-offset-1">
+            <img id="id_form-3-images-show" src="" width="180px" >
+         </div>
+         </div>
+
+
+          <div class="row">
+            <div class="form-group col-md-2">
+
+                <script>
+                    function readURL4(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('#id_form-4-images-show').attr('src', e.target.result);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                    <span class="btn btn-default btn-file">
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' id="id_form-4-images" name="form-4-images" size="40" onchange='readURL4(this);'>
+                    </span>
+                    &nbsp;
+
+
+            </div>
+             <div class="col-md-3 col-md-offset-1">
+                <img id="id_form-4-images-show" src="" width="180px" >
+             </div>
+              <!-- new -->
+          <div class="form-group col-md-2 col-md-offset-1">
+
+                <script>
+                    function readURL5(input) {
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                $('#id_form-5-images-show').attr('src', e.target.result);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
+                    <span class="btn btn-default btn-file">
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' id="id_form-5-images" name="form-5-images" size="40" onchange='readURL5(this);'>
+                    </span>
+                    &nbsp;
+
+
+        </div>
+         <div class="col-md-3 col-md-offset-1">
+            <img id="id_form-5-images-show" src="" width="180px" >
+         </div>
+         </div>
+
+
+
+    <div class="row">
+        <div class="form-group col-md-5">
+            <button type="submit" class="btn btn-info">Додати нове взуття</button>
+         </div>
+    </div>
 </form>
-{%  endif %}
+
 {% endblock %}
 
 

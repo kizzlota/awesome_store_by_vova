@@ -67,6 +67,9 @@ class ShoeParameters(models.Model):
     relation_to_shoes_photos = models.ManyToManyField(ShoesPhotos)
     rel_to_size = models.ManyToManyField(ShoeSizeParams)
 
+    def min_value_filter(self):
+        return min(self.price)
+
     def relation_to_photo(self):
         return self.relation_to_shoes_photos.all()
 

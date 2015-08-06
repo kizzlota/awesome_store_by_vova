@@ -105,8 +105,7 @@ function showSpoiler(obj)
         <th>Phone</th>
         <th>Adress</th>
         <th>Order details</th>
-        <th>Total Sum</th>
-          <th>Date</th>
+        <th>Date</th>
 
       </tr>
     </thead>
@@ -151,25 +150,20 @@ function showSpoiler(obj)
   {%  for ii in order.shoe_size_id %}
                 <tr>
 
-
             {% for param in ii.shoeparameters_set.all %}
-                {% if user.is_staff %}
+
         <td><a href="/orders/order_detail/?o={{ order.id }}" data-toggle="tooltip" data-placement="top" title="edit">{{ ii.id }} </a></td>
-                {% else %}
-                <td>{{ ii.id }}</td>
-                {% endif %}
+        <td>{{ ii.id }}</td>
         <td>{{ param.price }} </td>
         <td> {{ param.model_of_shoe }}</td>
         <td> {{ ii.size }}</td>
-                {% with order.shoes_quantity|str_to_dict as dict %}
-       {%  for key, value in dict.iteritems %}
+        {% with order.shoes_quantity|str_to_dict as dict %}
+        {%  for key, value in dict.iteritems %}
 
         {% if ii.id|add:'0' == key|add:'0' %} <td>{{ value }} штук.</td>
            {%  endif %}
            {%  endfor %}{% endwith %}
         <td> <img src="/media/{{ param.main_image }}" width="96px"> </td>
-
-
       </tr>
         {% endfor %}
         {% endfor %}
@@ -177,7 +171,7 @@ function showSpoiler(obj)
 <script>
 $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
-});
+    });
 </script>
 
     </div>
@@ -194,4 +188,5 @@ $(document).ready(function(){
     $('[data-toggle="tooltip"]').tooltip();
 });
 </script>
+    </div>
 {%  endblock %}

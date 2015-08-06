@@ -1,48 +1,214 @@
 {% extends 'base.html' %}
 {% load humanize %}
-
+{% load str_to_dic %}
 {% block content %}
+    <script>
+        var sizeQuantity = {};
+
+    </script>
+<h3> Edit Order </h3>
+
+    <h5>User info</h5>
+
+    <table class="table table-hover">
+     <thead>
+       <tr>
+
+        <th>Деталі</th>
+        <th>ID</th>
+        <th>shoe id</th>
+        <th>shoe photo</th>
+        <th>shoe model</th>
+        <th>price</th>
+        <th>new price</th>
+        <th>delete from order</th>
 
 
 
+      </tr>
+    </thead>
+
+      <tbody>
+    {%  for order in user_order_detail %}
+        {% for shoe_params in order.shoe_size_id %}
+            {%  for shoe in shoe_params.shoeparameters_set.all  %}
+                {%  for shoe_top in shoe.shoes_set.all  %}
+
+
+      <tr>
+         <td data-toggle="collapse" data-target="#demo_{{ shoe_params.id }}" class="accordion-toggle"><span class="glyphicon glyphicon-edit"  data-toggle="tooltip" data-placement="top" title="Click to see details"></span></td>
+        <td > <a href="/orders/order_detail/?o={{ order.id }}" data-toggle="tooltip" data-placement="bottom" title="Click to edit">{{ order.id }}</a></td>
+        <td>{{ shoe_params.id }}</td>
+        <td> <img src="/media/{{ shoe.main_image }}" width="128px"></td>
+        <td>{{ shoe_top.name }}</td>
+        <td> {{ shoe.price }} </td>
+        <td> {{ shoe.new_price }} </td>
+        <td> <a class="button"  href="/orders/del_from_order/{{ order.id }}/{{ shoe_params.id }}" >delete</a> </td>
+
+      </tr>
+ <tr>
+            <td colspan="9" class="hiddenRow">
+                <div class="accordian-body collapse" id="demo_{{ shoe_params.id }}">
+                 <table class="table table-hover">
+                    <thead>
+                          <tr>
+                            <th>ID</th>
+                            <th>Quantity</th>
+                            <th>size:</th>
+                            <th></th>
+                            <th>Add new:</th>
+
+                          </tr>
+                    </thead>
+                <tr>
+                                    <form action="/orders/edit_shoe_quantity/?ord_id={{user_data}}" method="POST" class="form-horizontal" role="form">
+                                     {% csrf_token %}
+                                    <input type="hidden" name="edit_size_quan" id="id_edit_size_quan" value="true">
+                                       <td> {{ order.id }}</td>
+
+                                        {% with order.shoes_quantity|str_to_dict as dict %}
+                                            {% for key, value in dict.iteritems %}
+                                                {%  if shoe_params.id|add:'0' == key|add:'0' %}
+
+                                                <td > <input type="text" name="quantity" class="form-control" id="id_quantity" value="{{ value }}" width="20px" /></td>
+                                                <input type="hidden" name="shoe_id" class="form-control" id="id_shoe_id" value="{{ key }}" width="20px" />
+                                                {%  endif %}
+
+
+                                            {% endfor %}
+                                        {% endwith %}
+                                     <td > {{ shoe_params.size }}</td>
+                                      <td>   <button type="submit" class="btn btn-default">Submit</button> </td>
+
+                                  </form>
+
+
+                              <td> <a class="btn btn-default" data-toggle="collapse" data-target="#demo_plus" class="accordion-toggle">+</a> </td>
+
+                 </tr>
+
+
+                              <tr ><td colspan="5" class="hiddenRow"><div class="accordian-body collapse" id="demo_plus">
+                                 <table class="table table-hover"><tr>
+                                  <td>
+
+
+                               <form action="/orders/edit_shoe_quantity/?ord_id={{user_data}}" method="POST" class="form-horizontal" role="form">
+
+                                {% csrf_token %}
+                                <input type="hidden" name="edit_size_quan" id="id_edit_size_quan" value="false">
+                                          <div class="form-group col-md-2">
+                                                <label for="sel1">Вибиріть розмір:</label>
+                                                <select class="form-control" name="jsSelect_22" id="jsSelect_22"
+                                                        onChange="jsFunction_2()">
+                                                    {% for size in shoe.rel_to_size.all %}
+                                                        {% if size.quantity > 0 %}
+                                                            <option value="{{ size.id }}">{{ size.size }}</option>
+                                                            <script>
+                                                                sizeQuantity[{{ size.id }}] = {{ size.quantity }};
+                                                            </script>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+
+
+                                            <script>
+                                                function jsFunction_2() {
+                                                    $('#jsSelect_22').each(function () {
+                                                        var $this = $(this); // cache this jQuery object to avoid overhead
+                                                        console.log($this.val()); // shoes size id
+
+                                                        $(".ShoeQuan").attr({'max': sizeQuantity[$this.val()], 'id': $this.val() });
+
+                                                        $('#available').text('Доступно на складі ' + sizeQuantity[$this.val()] + ' пар.');
+                                                        updateInput();
+                                                    });
+                                                }
+
+                                                   function maxLengthCheck(object) {
+                                                     if (object.value.length > object.maxLength){
+                                                        object.value = object.value.slice(0, object.maxLength);
+                                                        if (object.value >>> object.max) {
+                                                            object.value = object.max;
+                                                        }
+                                                     }
+                                                   // console.log(object.value);
+                                                   // console.log(object.max);
+
+                                                }
+
+                                            </script>
+                                            <div class=" col-md-2 col-md-offset-1">
+                                                <label for="587">Кількість:</label>
+
+                                                <br>
+                                                <input class="ShoeQuan" name="quan_22"
+                                                       oninput="maxLengthCheck(this)" maxlength="2" id="587" min="1" type="number"
+                                                       value="1" max=""> <span id="available"> Доступно на складі  пар.</span>
+                                            </div>
+
+                                    <br><br><br> <button type="submit" class="btn btn-default">Submit</button>
+                               </form>
+                                       </td> </tr></table> </div>
+                                </td></tr>
+
+ </table>
+
+  </div> </td>
+</tr>
+
+    {%  endfor %}
+    {%  endfor %}
+    {%  endfor %}
+    {%  endfor %}
+  </tbody>
+    </table>
 
 <form action="/orders/order_detail/?o={{ user_data }}" method="POST" class="form-horizontal" role="form">
     {% csrf_token %}
 
     <div class="form-group has-success">
-        <label class="control-label" for="inputSuccess1">{{ edit_form.user_name.label }}</label>
-        <input type="text" class="form-control" id="inputSuccess1" value="{{ edit_form.user_name.value }}" />
+        <label class="control-label" for="user_name">{{ edit_form.user_name.label }}</label>
+        <input type="text" name="user_name" class="form-control" id="user_name" value="{{ edit_form.user_name.value }}" />
     </div>
 
      <div class="form-group has-success">
-        <label class="control-label" for="inputSuccess1">{{ edit_form.user_mail.label }}</label>
-        <input type="text" class="form-control" id="inputSuccess2" value="{{ edit_form.user_mail.value }}" />
+        <label class="control-label" for="user_mail">{{ edit_form.user_mail.label }}</label>
+        <input type="text" name="user_mail" class="form-control" id="user_mail" value="{{ edit_form.user_mail.value }}" />
     </div>
 
     <div class="form-group has-success">
-            <label class="control-label" for="inputSuccess1">{{ edit_form.user_phone.label }} </label>
-            <input type="text" class="form-control" id="inputSuccess3" value="{{ edit_form.user_phone.value }}" />
+        <label class="control-label" for="user_phone">{{ edit_form.user_phone.label }} </label>
+        <input type="text" name="user_phone" class="form-control" id="user_phone" value="{{ edit_form.user_phone.value }}" />
         </div>
 
-     <div class="form-group has-success">
-                <label class="control-label" for="inputSuccess1">{{ edit_form.shoes_quantity.label }} </label>
-                <input type="text" class="form-control" id="inputSuccess4" value="{{ edit_form.shoes_quantity.value }}" />
-    </div>
-
-     <div class="form-group has-success">
-                    <label class="control-label" for="inputSuccess1">{{ edit_form.user_address.label }} </label>
-                    <input type="text" class="form-control" id="inputSuccess5" value="{{ edit_form.user_address.value }}" />
+    <div class="form-group has-success">
+                <label class="control-label" for="shoes_quantity">{{ edit_form.shoes_quantity.label }} </label>
+                <input type="text" name="shoes_quantity" class="form-control" id="shoes_quantity" value="{{ edit_form.shoes_quantity.value }}" />
     </div>
 
 
+     <div class="form-group has-success">
+        <label class="control-label" for="user_address">{{ edit_form.user_address.label }} </label>
+        <input type="text" name="user_address" class="form-control" id="user_address" value="{{ edit_form.user_address.value }}" />
+    </div>
+
+    <div class="form-group has-success">
         <p> {{ edit_form.status.label }} {{ edit_form.status }}</p>
+    </div>
 <br>
 
       <button type="submit" class="btn btn-default">Submit</button>
 
-  </div>
+
 </form>
+
+
+
+
+
+
+
+
 {% endblock %}
-
-
-

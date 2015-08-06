@@ -6,6 +6,12 @@
   <h2>Orders List</h2>
 
 
+<script>
+$(document).ready(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+
 
 
   <table class="table table-hover">
@@ -28,8 +34,8 @@
          {% for order in all_orders_info %}
 
       <tr >
-         <td data-toggle="collapse" data-target="#demo_{{ order.id }}" class="accordion-toggle"><span class="glyphicon glyphicon-eye-open"></span></td>
-        <td > <a href="/orders/order_detail/?o={{ order.id }}">{{ order.id }}</a></td>
+         <td data-toggle="collapse" data-target="#demo_{{ order.id }}" class="accordion-toggle"><span class="glyphicon glyphicon-edit"  data-toggle="tooltip" data-placement="top" title="Click to see details"></span></td>
+        <td > <a href="/orders/order_detail/?o={{ order.id }}" data-toggle="tooltip" data-placement="bottom" title="Click to edit">{{ order.id }}</a></td>
 
         <td>{{ order.user_name }}</td>
         <td> {{ order.user_mail }}</td>
@@ -64,7 +70,7 @@
 
             {% for param in ii.shoeparameters_set.all %}
                 {% if user.is_staff %}
-        <td><a href="/orders/order_detail/?o={{ order.id }}">{{ ii.id }} </a></td>
+        <td><a href="/orders/order_detail/?o={{ order.id }}" >{{ ii.id }} </a></td>
                 {% else %}
                  <td>{{ ii.id }}</td>
                 {% endif %}

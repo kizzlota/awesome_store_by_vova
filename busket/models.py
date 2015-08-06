@@ -75,7 +75,6 @@ class OrderModel(models.Model):
         return shoes_list
 
 
-
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'user_name', 'user_phone', 'user_address', 'user_mail', 'date', 'status']
     search_fields = ['user_name', 'user_phone', 'user_address']

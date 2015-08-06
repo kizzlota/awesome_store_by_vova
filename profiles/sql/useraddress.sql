@@ -1,0 +1,1 @@
+INSERT INTO profiles_useraddress(phone, address, city, street, country) VALUES ('38067000000', 'local_world', 'world', '1', 'ukr');

@@ -10,9 +10,8 @@
         <button class="btn btn-primary dropdown-toggle glyphicon glyphicon-filter" type="button" data-toggle="dropdown">filters
         <span class="caret"></span></button>
         <ul class="dropdown-menu">
-            <li><a href="/filter/?f='price'">filter_by_price</a></li>
-            <li><a href="/filter/?f='date'">filter_by_date</a></li>
-            <li><a href="/filter/?f='color'">filter_by_color</a></li>
+            <li><a href="/?price=price_big">від дорожчих</a></li>
+            <li><a href="/?price=price_small">від дешевших</a></li>
         </ul>
     </div>
 
@@ -24,8 +23,18 @@
 {% load humanize %}
 {% block content %}
 
-{% autopaginate shoes 3 %}
 
+    {%  if bought_cook %}
+       <div class="alert alert-success alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <strong>Nice</strong> <h3>Одиниця товару добавлена в корзину</h3>
+
+    </div>
+        {% endif %}
+
+
+{% autopaginate shoes 5 %}
+<div class="row">
     {% for shoe in shoes %}
     {%  for params in shoe.relation_to_shoes_params.all %}
 
@@ -53,11 +62,17 @@
          </div>
      </div>
 
-{%  endfor %}
-{% endfor %}
+    {%  endfor %}
+    {% endfor %}
+</div>
+    <br>
+<div class="row">
     {% paginate %}
 
-
+</div>
+{% if not shoes %}
+    капці розкуплені
+    {% endif %}
 
 {% endblock %}
 
