@@ -8,9 +8,15 @@ from django.db.models import Sum
 from catalog.views import basket_info
 from profiles.mailing import send_email, send_order_email
 import json
-
+import requests
 
 def new_order(request):
+	order_id = OrderModel.objects.last()
+	print order_id.id
+	bot = ('https://api.telegram.org/bot120000427:AAGVzPumYWYHJAx_EtBS3KehPA2r-_5Fxwg/sendMessage')
+	data_chat = {'chat_id': -20063683, 'text': 'new order created. order id is --> %s' % order_id.id}
+
+
 	user_credentials = {}
 	info_basket = basket_info(request)
 	if request.method == 'POST':  # якщо метод з форми є POST тоді наступне
@@ -22,6 +28,8 @@ def new_order(request):
 			# name_form.save_m2m()
 			info_basket[0].delete()
 			send_order_email(post.id, prefix='send_order_email')
+			requests.post(bot, data_chat)
+
 			return HttpResponseRedirect('/thanks')
 
 	else:
@@ -95,7 +103,7 @@ def del_from_order(request, order_id, shoe_id):
 def edit_shoe_quantity(request):
 	if request.method == 'POST':
 		if request.POST.get('edit_size_quan') == 'false':
-			print "true"
+
 			quan_size = request.GET.get('ord_id')
 			quant_edit = str(request.POST.get('jsSelect_22'))
 			key_shoe = str(request.POST.get('quan_22'))

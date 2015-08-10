@@ -21,15 +21,14 @@ def true_busket(request):
 	return BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 
 
+
 def basket_info(request):
 	user_date = request.META.get('USERNAME', 'anonymous') + request.META.get('REMOTE_ADDR', 'host') + request.META.get(
 		'HTTP_USER_AGENT', 'chrome') + \
 	            request.META.get('PROCESSOR_IDENTIFIER', 'not_atested')
-
 	basket = BasketModel.objects.filter(data_user_hash=hashlib.sha256(user_date).hexdigest())
 	total_sum = 0
 	id_list = []
-
 	for ids in basket:
 		id_list.append(ids.shoes_id.id)
 
@@ -38,6 +37,7 @@ def basket_info(request):
 			total_sum += price.price
 
 	return basket, total_sum, id_list
+
 
 
 def index(request):
@@ -234,6 +234,3 @@ def shoe_ind_edit(request, shoe_id, params_id):
 	                                                             'shoes_size_form': shoes_size_form,
 	                                                             'shoe_main_param': shoe_main_param
 	                                                             })
-
-
-URL = "https://api.telegram.org/bot%s/" % '120000427:AAGVzPumYWYHJAx_EtBS3KehPA2r-_5Fxwg'
